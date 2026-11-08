@@ -3,6 +3,7 @@
   "scripts": {
     "build": "turbo run build",
     "lint": "turbo run lint",
+    "precheck": "turbo run lint",
     "format:check": "prettier --check \"**/*.{ts,tsx,md,mdx,css}\"",
     "format": "prettier --write \"**/*.{ts,tsx,md,mdx,css}\"",
     "test": "turbo run test && node --test tests/*.test.mjs",
