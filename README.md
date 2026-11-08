@@ -1,16 +1,16 @@
-# Krizaka Composer
+# Krizaka UI Builder
 
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-composer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-composer) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-composer&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-composer) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-composer&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-composer) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-composer&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-composer) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-composer&metric=coverage)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-composer)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-ui-builder&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-ui-builder) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-ui-builder&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-ui-builder) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-ui-builder&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-ui-builder) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-ui-builder&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-ui-builder) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-ui-builder&metric=coverage)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-ui-builder)
 
 The visual page editor of the Krizaka family: **the Krizaka fork of [Puck](https://github.com/puckeditor/puck)**, to be
-published on npm as `@krizaka/composer` (MIT). It keeps Puck's canvas, drag and drop, outline and phone layout, and
+published on npm as `@krizaka/ui-builder` (MIT). It keeps Puck's canvas, drag and drop, outline and phone layout, and
 changes what the products need: a versioned document validated with zod, nested blocks, content per locale, variables
 and bindings; an editor in French and English; Krizaka's tokens and `@krizaka/ui` controls, keyboard and accessibility.
 
 |              |                                                                                                                                                |
 | :----------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
-| Package      | `@krizaka/composer` on npm (MIT), released with changesets and npm provenance; the editor is `packages/core`.                                  |
-| Document     | `@krizaka/composer/document`: the versioned `ComposerDocument` (schema 2), validated with zod, no React, runs on a server.                     |
+| Package      | `@krizaka/ui-builder` on npm (MIT), released with changesets and npm provenance; the editor is `packages/core`.                                  |
+| Document     | `@krizaka/ui-builder/document`: the versioned `ComposerDocument` (schema 2), validated with zod, no React, runs on a server.                     |
 | Upstream     | `puckeditor/puck`, tracked as the `upstream` remote: security and bug fixes are cherry-picked, generic fixes are proposed back from this fork. |
 | Licence      | MIT. Puck's [LICENSE](LICENSE) is kept unchanged; see [NOTICE](NOTICE).                                                                        |
 | Used by      | [Folioviv](https://github.com/krizaka/folioviv)'s shop editor (Boutique › Page).                                                               |
@@ -29,7 +29,7 @@ import {
   defineBlocks,
   validateDocument,
   readDocument,
-} from "@krizaka/composer/document";
+} from "@krizaka/ui-builder/document";
 
 const registry = defineBlocks({
   blocks: {

@@ -1,4 +1,4 @@
-// `@krizaka/composer/document`: the document, its validation, its migration. No React, no DOM: it runs on a server.
+// `@krizaka/ui-builder/document`: the document, its validation, its migration. No React, no DOM: it runs on a server.
 export * from "./types";
 export * from "./limits";
 export { documentSchema, parseDocument, walkBlocks } from "./schema";

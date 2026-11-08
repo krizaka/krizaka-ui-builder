@@ -1,8 +1,8 @@
-# krizaka-composer — agent contract
+# krizaka-ui-builder — agent contract
 
 <!-- krizaka-agents-template v1: rendered from krizaka/.github docs/standards/agents-template.md (scripts/agents-md.mjs). Keep every heading; the conformance check « agents-template » reads them. Repository detail goes to docs/agents.md, not here. -->
 
-Shared visual page editor: the Krizaka fork of Puck (`@krizaka/composer`).
+Shared visual page editor: the Krizaka fork of Puck (`@krizaka/ui-builder`).
 
 ## Profile
 
