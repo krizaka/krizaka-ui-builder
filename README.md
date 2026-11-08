@@ -9,8 +9,8 @@ and bindings; an editor in French and English; Krizaka's tokens and `@krizaka/ui
 
 |              |                                                                                                                                                |
 | :----------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
-| Package      | `@krizaka/ui-builder` on npm (MIT), released with changesets and npm provenance; the editor is `packages/core`.                                  |
-| Document     | `@krizaka/ui-builder/document`: the versioned `ComposerDocument` (schema 2), validated with zod, no React, runs on a server.                     |
+| Package      | `@krizaka/ui-builder` on npm (MIT), released with changesets and npm provenance; the editor is `packages/core`.                                |
+| Document     | `@krizaka/ui-builder/document`: the versioned `ComposerDocument` (schema 2), validated with zod, no React, runs on a server.                   |
 | Upstream     | `puckeditor/puck`, tracked as the `upstream` remote: security and bug fixes are cherry-picked, generic fixes are proposed back from this fork. |
 | Licence      | MIT. Puck's [LICENSE](LICENSE) is kept unchanged; see [NOTICE](NOTICE).                                                                        |
 | Used by      | [Folioviv](https://github.com/krizaka/folioviv)'s shop editor (Boutique › Page).                                                               |
