@@ -1,0 +1,33 @@
+# Weekly check: new puck releases and security advisories.
+# Puck security fixes are cherry-picked into this fork (docs/agents.md § Upstream).
+# This workflow prints upstream releases and advisories so the platform team can act.
+name: Watch upstream (puck)
+on:
+  schedule:
+    - cron: "0 9 * * 1" # weekly, Monday 09:00 UTC
+  workflow_dispatch: {}
+permissions: { contents: read }
+jobs:
+  check-puck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Latest puck releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "## Latest puck releases" >> "$GITHUB_STEP_SUMMARY"
+          gh release list --repo puckeditor/puck --limit 5 >> "$GITHUB_STEP_SUMMARY"
+      - name: Puck security advisories
+        run: |
+          echo "## Puck published advisories" >> "$GITHUB_STEP_SUMMARY"
+          curl -sS "https://api.github.com/repos/puckeditor/puck/security-advisories?per_page=5" \
+            | python3 -c "
+          import sys, json
+          advs = json.load(sys.stdin)
+          if not advs:
+              print('None published.')
+          else:
+              for a in advs:
+                  print(a.get('ghsa_id','?'), a.get('severity','?'), a.get('summary','?'))
+          " >> "$GITHUB_STEP_SUMMARY"
