@@ -1,4 +1,4 @@
-# krizaka-composer in detail
+# krizaka-ui-builder (Krizaka UI Builder) in detail
 
 The Krizaka fork of Puck (folioviv ADR-010, amended 2026-10-31). Read this before touching the code.
 
@@ -14,12 +14,12 @@ The Krizaka fork of Puck (folioviv ADR-010, amended 2026-10-31). Read this befor
 - Keep the canvas, drag and drop and the outline close to upstream so their fixes still apply; change them only with a
   reason in the pull request.
 - Never open a pull request against `puckeditor/puck` by accident: `gh` in a fork defaults to the parent, so always pass
-  `--repo krizaka/krizaka-composer` (the org's `pr-open` does).
+  `--repo krizaka/krizaka-ui-builder` (the org's `pr-open` does).
 
 ## Plan (krizaka-internal#1889)
 
 1. C0 — the fork set up (this state): CI on the org's reusable workflows, protection, registry. Nothing published.
-2. C1 (this state) — `packages/core` is `@krizaka/composer`; the `ComposerDocument` schema in `/document`; the drops; first npm release by changesets (`.github/workflows/release.yml`).
+2. C1 (this state) — `packages/core` is `@krizaka/ui-builder`; the `ComposerDocument` schema in `/document`; the drops; first npm release by changesets (`.github/workflows/release.yml`).
 3. C2 — the editor's words in French and English (`@krizaka/i18n`).
 4. C3 — ergonomics: Krizaka tokens, `@krizaka/ui` controls, keyboard, accessibility.
 

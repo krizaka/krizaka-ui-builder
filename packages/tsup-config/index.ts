@@ -8,7 +8,7 @@ const config: Options = {
   external: [
     "react",
     "react-dom",
-    "@krizaka/composer",
+    "@krizaka/ui-builder",
     "@dnd-kit/react",
     "@dnd-kit/dom",
     "@dnd-kit/abstract",

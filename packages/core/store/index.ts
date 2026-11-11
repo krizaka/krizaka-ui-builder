@@ -353,7 +353,7 @@ export type AppStoreApi = ReturnType<typeof createAppStore>;
 export const appStoreContext = createContext<AppStoreApi | null>(null);
 
 // Fallback store used only when a component reads the store outside of a <Puck> provider (e.g. <Render> for SSR).
-// Created lazily instead of at module scope so that importing @krizaka/composer has no side effects that might
+// Created lazily instead of at module scope so that importing @krizaka/ui-builder has no side effects that might
 // be unsupported in edge runtimes
 let defaultAppStore: AppStoreApi | null = null;
 

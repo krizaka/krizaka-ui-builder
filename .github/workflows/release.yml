@@ -1,6 +1,6 @@
-# .github/workflows/release.yml (krizaka-composer): changesets opens « chore: version packages »; its merge publishes
-# @krizaka/composer to npm with provenance (trusted publishing by OIDC, the npm trust is set by an owner:
-# `npm trust github @krizaka/composer --repository krizaka/krizaka-composer --file release.yml`).
+# .github/workflows/release.yml (krizaka-ui-builder): changesets opens « chore: version packages »; its merge publishes
+# @krizaka/ui-builder to npm with provenance (trusted publishing by OIDC, the npm trust is set by an owner:
+# `npm trust github @krizaka/ui-builder --repository krizaka/krizaka-ui-builder --file release.yml`).
 name: Release
 on: { push: { branches: [main] }, workflow_dispatch: {} }
 permissions: { contents: read } # write scopes live on the job (OpenSSF Scorecard, Token-Permissions)

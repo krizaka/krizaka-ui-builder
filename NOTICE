@@ -1,7 +1,7 @@
-Krizaka Composer
-Copyright (c) Krizaka and the Krizaka Composer contributors.
+Krizaka UI Builder
+Copyright (c) Krizaka and the Krizaka UI Builder contributors.
 
-Krizaka Composer is a fork of Puck (https://github.com/puckeditor/puck),
+Krizaka UI Builder is a fork of Puck (https://github.com/puckeditor/puck),
 Copyright (c) The Puck Contributors, distributed under the MIT License.
 The fork started from puckeditor/puck@d14401c3a47947543e9de733ef1a20fb85140d52 (2026-10-31, Puck 0.24.0).
 Puck's LICENSE file is kept unchanged; Krizaka's changes are released under the same MIT License.
