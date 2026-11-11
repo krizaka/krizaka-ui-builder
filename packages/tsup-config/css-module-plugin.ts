@@ -7,16 +7,16 @@ import type { Plugin } from "esbuild";
 export const cssModulePlugin: Plugin = {
   name: "css-module",
   setup(build) {
-    build.onResolve(
-      { filter: /\.module\.css$/, namespace: "file" },
-      (args) => ({
-        path: `${path.join(args.resolveDir, args.path)}#css-module`,
+    const pkgRoot = build.initialOptions.absWorkingDir ?? process.cwd();
+
+    build.onResolve({ filter: /\.module\.css$/, namespace: "file" }, (args) => {
+      const absPath = path.join(args.resolveDir, args.path);
+      return {
+        path: `${path.relative(pkgRoot, absPath)}#css-module`,
         namespace: "css-module",
-        pluginData: {
-          pathDir: path.join(args.resolveDir, args.path),
-        },
-      })
-    );
+        pluginData: { pathDir: absPath },
+      };
+    });
     build.onLoad(
       { filter: /#css-module$/, namespace: "css-module" },
       async (args) => {
@@ -37,16 +37,21 @@ export const cssModulePlugin: Plugin = {
 
         return {
           pluginData: { css: result.css },
-          contents: `import "${
+          resolveDir: pkgRoot,
+          contents: `import "${path.relative(
+            pkgRoot,
             pluginData.pathDir
-          }"; export default ${JSON.stringify(cssModule)}`,
+          )}"; export default ${JSON.stringify(cssModule)}`,
         };
       }
     );
     build.onResolve(
       { filter: /\.module\.css$/, namespace: "css-module" },
       (args) => ({
-        path: path.join(args.resolveDir, args.path, "#css-module-data"),
+        path: `${path.relative(
+          pkgRoot,
+          path.join(args.resolveDir, args.path)
+        )}#css-module-data`,
         namespace: "css-module",
         pluginData: args.pluginData as { css: string },
       })
