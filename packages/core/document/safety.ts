@@ -24,6 +24,10 @@ const MARKUP = /<\s*\/?\s*[a-zA-Z!?]/;
 const SCRIPT_URL = /(?:javascript|vbscript)\s*:|data\s*:\s*text\/html/i;
 const CONTROL = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/;
 
+/** Keys that reach an object's prototype chain, refused at every depth. */
+export const isPrototypeKey = (name: string): boolean =>
+  name === "__proto__" || name === "constructor" || name === "prototype";
+
 /** A prop or slot name: an identifier that is not on the forbidden list and not an event handler (`onClick`). */
 export function isSafeKey(name: string): boolean {
   return (

@@ -16,7 +16,7 @@ export const Loader = ({
   const loadingLabel = useMessage("loader-loading");
 
   return (
-    <span
+    <output
       className={getClassName()}
       style={{
         width: size,

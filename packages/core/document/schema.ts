@@ -3,7 +3,12 @@
 import * as z from "zod";
 
 import { DEFAULT_LIMITS, type DocumentLimits } from "./limits";
-import { checkText, isSafeKey, RESERVED_LOCALE_KEYS } from "./safety";
+import {
+  checkText,
+  isPrototypeKey,
+  isSafeKey,
+  RESERVED_LOCALE_KEYS,
+} from "./safety";
 import {
   DOCUMENT_SCHEMA_VERSION,
   type Block,
@@ -77,12 +82,17 @@ function checkProps(
   path: string,
   report: Report,
   doc: ComposerDocument,
-  limits: DocumentLimits
+  limits: DocumentLimits,
+  label = ""
 ) {
   for (const [name, value] of Object.entries(properties)) {
     const where = `${path}.${name}`;
     if (!isSafeKey(name))
-      report(where, "unsafe_key", `"${name}" is not an allowed prop name`);
+      report(
+        where,
+        "unsafe_key",
+        `"${name}" is not an allowed prop name${label}`
+      );
     checkValue(value, where, report, doc, limits);
   }
 }
@@ -150,7 +160,14 @@ function checkBlocks(
     seen.add(b.id);
     if (depth > limits.maxDepth)
       report(path, "limit", `blocks nest at most ${limits.maxDepth} deep`);
-    checkProps(b.props, `${path}.props`, report, doc, limits);
+    checkProps(
+      b.props,
+      `${path}.props`,
+      report,
+      doc,
+      limits,
+      ` (block "${b.id}")`
+    );
     for (const slot of Object.keys(b.slots))
       if (!isSafeKey(slot))
         report(
@@ -177,23 +194,84 @@ function checkRules(
   return issues;
 }
 
+const isObject = (v: unknown): v is Record<string, unknown> =>
+  typeof v === "object" && v !== null && !Array.isArray(v);
+
+/** Prototype keys under `value`, read from the raw input because zod drops an own `__proto__` while parsing. */
+function scanProto(
+  value: unknown,
+  path: string,
+  report: Report,
+  label: string,
+  nested = false
+) {
+  if (Array.isArray(value))
+    value.forEach((v, i) => scanProto(v, `${path}.${i}`, report, label, true));
+  else if (isObject(value))
+    for (const k of Object.keys(value)) {
+      // Prop names are `isSafeKey`'s; zod keeps `constructor`/`prototype` there, only `__proto__` is lost.
+      if (nested ? isPrototypeKey(k) : k === "__proto__")
+        report(
+          `${path}.${k}`,
+          "unsafe_key",
+          `"${k}" is not an allowed key${label}`
+        );
+      scanProto(value[k], `${path}.${k}`, report, label, true);
+    }
+}
+
+function scanBlocks(blocks: unknown, path: string, report: Report) {
+  if (!Array.isArray(blocks)) return;
+  blocks.forEach((b: unknown, i) => {
+    if (!isObject(b)) return;
+    const here = `${path}.${i}`;
+    const label = typeof b.id === "string" ? ` (block "${b.id}")` : "";
+    scanProto(b.props, `${here}.props`, report, label);
+    if (!isObject(b.slots)) return;
+    for (const slot of Object.keys(b.slots)) {
+      if (slot === "__proto__")
+        report(
+          `${here}.slots.${slot}`,
+          "unsafe_key",
+          `"${slot}" is not an allowed slot name${label}`
+        );
+      scanBlocks(b.slots[slot], `${here}.slots.${slot}`, report);
+    }
+  });
+}
+
+function protoIssues(input: unknown): DocumentIssue[] {
+  const issues: DocumentIssue[] = [];
+  const report: Report = (path, code, message) =>
+    issues.push({ path, code, message });
+  if (!isObject(input)) return issues;
+  if (isObject(input.root))
+    scanProto(input.root.props, "root.props", report, " (root)");
+  scanBlocks(input.blocks, "blocks", report);
+  return issues;
+}
+
 /** Reads untrusted JSON into a document: every issue with its path, never a throw. Does not know the block types. */
 export function parseDocument(
   input: unknown,
   limits: DocumentLimits = DEFAULT_LIMITS
 ): ParseResult<ComposerDocument> {
+  const proto = protoIssues(input);
   const parsed = documentSchema.safeParse(input);
   if (!parsed.success) {
     return {
       ok: false,
-      issues: parsed.error.issues.map((i) => ({
-        path: at(i.path),
-        code: "shape" as const,
-        message: i.message,
-      })),
+      issues: [
+        ...proto,
+        ...parsed.error.issues.map((i) => ({
+          path: at(i.path),
+          code: "shape" as const,
+          message: i.message,
+        })),
+      ],
     };
   }
-  const issues = checkRules(parsed.data, limits);
+  const issues = [...proto, ...checkRules(parsed.data, limits)];
   return issues.length > 0
     ? { ok: false, issues }
     : { ok: true, value: parsed.data };
