@@ -43,6 +43,7 @@ export const defaultDictionary = {
   "field-arrayitem-delete": "Delete",
   // Viewport controls
   "viewport-zoom-in": "Zoom viewport in",
+  "viewport-zoom-select": "Zoom level",
   "viewport-zoom-out": "Zoom viewport out",
   "viewport-zoom-auto": "{zoom}% (Auto)",
   "viewport-toggle-menu": "Toggle viewport menu",

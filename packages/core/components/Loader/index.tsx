@@ -23,6 +23,7 @@ export const Loader = ({
         height: size,
         color,
       }}
+      role="status"
       aria-label={loadingLabel}
       {...props}
     />

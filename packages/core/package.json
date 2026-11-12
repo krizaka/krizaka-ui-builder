@@ -99,6 +99,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/uuid": "^10.0.0",
+    "axe-core": "4.11.4",
     "css-box-model": "^1.2.1",
     "esbuild": "^0.28.1",
     "eslint": "^9.0.0",

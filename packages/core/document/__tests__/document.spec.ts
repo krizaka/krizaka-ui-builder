@@ -121,18 +121,64 @@ describe("parseDocument", () => {
     const r = parseDocument(doc({ blocks: [block("a", "t", hostile)] }));
     expect(r.ok).toBe(false);
     expect(r.ok ? [] : r.issues.map((i) => i.code)).toEqual(
-      Array(3).fill("unsafe_key")
+      Array(4).fill("unsafe_key")
     );
   });
 
-  it("never lets a __proto__ key through", () => {
+  it("refuses a __proto__ key instead of dropping it", () => {
     const r = parseDocument(
       doc({ blocks: [block("a", "t", JSON.parse('{"__proto__": "x"}'))] })
     );
-    expect(
-      r.ok ? Object.keys(r.value.blocks[0].props) : ["refused"]
-    ).not.toContain("__proto__");
+    expect(r.ok).toBe(false);
     expect(({} as Record<string, unknown>).x).toBeUndefined();
+  });
+
+  describe.each(["__proto__", "constructor", "prototype"])("%s", (key) => {
+    const hostile = (v: unknown) =>
+      JSON.parse(`{"${key}": ${JSON.stringify(v)}}`);
+    const unsafe = (d: unknown) => {
+      const r = parseDocument(d);
+      return r.ok
+        ? []
+        : r.issues.filter((i) => i.code === "unsafe_key").map((i) => i.path);
+    };
+
+    it("is refused once, naming the block, in a block's props", () => {
+      const r = parseDocument(doc({ blocks: [block("a", "t", hostile("x"))] }));
+      const issues = r.ok ? [] : r.issues;
+      expect(issues.map((i) => `${i.code}@${i.path}`)).toEqual([
+        `unsafe_key@blocks.0.props.${key}`,
+      ]);
+      expect(issues[0].message).toContain('"a"');
+      expect(issues[0].message).toContain(key);
+    });
+
+    it("is refused in a nested slot block", () => {
+      expect(
+        unsafe(
+          doc({
+            blocks: [
+              block("a", "s", {}, { c: [block("b", "t", hostile("x"))] }),
+            ],
+          })
+        )
+      ).toEqual([`blocks.0.slots.c.0.props.${key}`]);
+    });
+
+    it("is refused in a nested object of props and in the root props", () => {
+      expect(
+        unsafe(doc({ blocks: [block("a", "t", { label: hostile("x") })] }))
+      ).toEqual([`blocks.0.props.label.${key}`]);
+      expect(unsafe(doc({ root: { props: hostile("x") } }))).toEqual([
+        `root.props.${key}`,
+      ]);
+    });
+  });
+
+  it("refuses a __proto__ slot name", () => {
+    const slots = JSON.parse('{"__proto__": []}');
+    const r = parseDocument(doc({ blocks: [block("a", "s", {}, slots)] }));
+    expect(r.ok ? [] : r.issues.map((i) => i.code)).toEqual(["unsafe_key"]);
   });
 
   it("holds the bounds", () => {
