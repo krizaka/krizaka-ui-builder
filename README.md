@@ -2,20 +2,50 @@
 
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-ui-builder&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-ui-builder) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-ui-builder&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-ui-builder) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-ui-builder&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-ui-builder) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-ui-builder&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-ui-builder) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-ui-builder&metric=coverage)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-ui-builder)
 
-The visual page editor of the Krizaka family: **the Krizaka fork of [Puck](https://github.com/puckeditor/puck)**, to be
-published on npm as `@krizaka/ui-builder` (MIT). It keeps Puck's canvas, drag and drop, outline and phone layout, and
-changes what the products need: a versioned document validated with zod, nested blocks, content per locale, variables
-and bindings; an editor in French and English; Krizaka's tokens and `@krizaka/ui` controls, keyboard and accessibility.
+The visual page editor of the Krizaka family: **the Krizaka fork of [Puck](https://github.com/puckeditor/puck)** (MIT),
+published on npm as [`@krizaka/ui-builder`](https://www.npmjs.com/package/@krizaka/ui-builder). It keeps Puck's canvas,
+drag and drop, outline and phone layout, and adds a versioned document validated with zod, nested blocks, content per
+locale, variables and bindings. What is done is under « Today », what is not is under « Planned » with its ticket.
 
-|              |                                                                                                                                                |
-| :----------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
-| Package      | `@krizaka/ui-builder` on npm (MIT), released with changesets and npm provenance; the editor is `packages/core`.                                |
-| Document     | `@krizaka/ui-builder/document`: the versioned `ComposerDocument` (schema 2), validated with zod, no React, runs on a server.                   |
-| Upstream     | `puckeditor/puck`, tracked as the `upstream` remote: security and bug fixes are cherry-picked, generic fixes are proposed back from this fork. |
-| Licence      | MIT. Puck's [LICENSE](LICENSE) is kept unchanged; see [NOTICE](NOTICE).                                                                        |
-| Try it       | The editor in your browser, nothing saved: [ui.krizaka.com/builder](https://ui.krizaka.com/builder).                                           |
-| Used by      | [Folioviv](https://github.com/krizaka/folioviv)'s shop editor (Boutique › Page).                                                               |
-| Contributing | [AGENTS.md](AGENTS.md) and [docs/agents.md](docs/agents.md); the org's standards in [krizaka/.github](https://github.com/krizaka/.github).     |
+```bash
+npm install @krizaka/ui-builder
+```
+
+[![npm](https://img.shields.io/npm/v/@krizaka/ui-builder)](https://www.npmjs.com/package/@krizaka/ui-builder) The badge
+shows the version published now.
+
+|              |                                                                                                                                                                   |
+| :----------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Package      | `@krizaka/ui-builder` on npm (MIT), released with changesets and npm provenance; the editor is `packages/core`.                                                   |
+| Document     | `@krizaka/ui-builder/document`: the versioned `ComposerDocument` (schema 2), validated with zod, no React, runs on a server.                                      |
+| Upstream     | Puck 0.24.0 (MIT, `puckeditor/puck`), tracked as the `upstream` remote: security and bug fixes are cherry-picked, generic fixes are proposed back from this fork. |
+| Licence      | MIT. Puck's [LICENSE](LICENSE) is kept unchanged; see [NOTICE](NOTICE).                                                                                           |
+| Try it       | The editor in your browser, nothing saved: [ui.krizaka.com/builder](https://ui.krizaka.com/builder).                                                              |
+| Used by      | [Folioviv](https://github.com/krizaka/folioviv)'s shop editor (Boutique › Page).                                                                                  |
+| Contributing | [AGENTS.md](AGENTS.md) and [docs/agents.md](docs/agents.md); the org's standards in [krizaka/.github](https://github.com/krizaka/.github).                        |
+
+## Today
+
+What the package does now:
+
+- **Document**: the versioned, zod-validated `ComposerDocument` below, with content per locale (`{ en, fr }` words in a
+  document), variables and bindings.
+- **Editor**: Puck's editor as of 0.24.0, in English. Puck's `dictionary` prop lets a host replace any editor string;
+  no translation ships with the package.
+- **Keyboard**: native buttons and keyboard equivalents (Enter, Space, Escape) for the click handlers on containers, the
+  modal backdrop and array items, and Puck's Delete and Backspace hotkeys.
+- **Removed from the fork**: see the end of « The document ».
+
+## Planned
+
+Not done yet; each line has its ticket (private tracker of the Krizaka team).
+
+- **French editor**: editor words in French and English through `@krizaka/i18n`
+  ([#1897](https://github.com/krizaka/krizaka-internal/issues/1897)).
+- **Krizaka tokens and `@krizaka/ui` controls** in the editor, with a keyboard and accessibility pass
+  ([#1905](https://github.com/krizaka/krizaka-internal/issues/1905)).
+- **A React-free page contract** with typed operations
+  ([#2261](https://github.com/krizaka/krizaka-internal/issues/2261)).
 
 ## The document
 
@@ -75,4 +105,5 @@ What runs in the Actions tab of this repository.
 - **Release** (`release.yml`): Versions and publishes the packages (Changesets). Runs on push, on demand.
 - **Scorecard** (`scorecard.yml`): OpenSSF Scorecard of the repository. Runs when branch rules change, on a schedule, on demand.
 - **Security scan** (`security.yml`): Secret scan (gitleaks) and workflow scan (zizmor); both are required checks. Runs on every pull request, in the merge queue, on push.
+
 <!-- krizaka:workflows:end -->
