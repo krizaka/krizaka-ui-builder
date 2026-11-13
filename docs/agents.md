@@ -16,6 +16,20 @@ The Krizaka fork of Puck (folioviv ADR-010, amended 2026-10-31). Read this befor
 - Never open a pull request against `puckeditor/puck` by accident: `gh` in a fork defaults to the parent, so always pass
   `--repo krizaka/krizaka-ui-builder` (the org's `pr-open` does).
 
+## Editor task cost (krizaka-internal#3544)
+
+`e2e/editor-task-cost.spec.ts` plays five editor tasks (add, move, remove, undo, change the content language) at 1440 x 900
+and at 360 x 780, with the pointer and with the keyboard. For each it records the gestures, the Tab stops from the top of the
+page, and the size and height on the screen (share of the screen height) of every command it uses. The numbers live in
+`e2e/editor-task-cost.reference.json`; the test fails when an action count or a Tab-stop count grows, when a task that
+worked can no longer be done (`null` means "cannot be done"), or when a new level A or B command is under 44 px on the phone or
+32 px on the desk. Today's commands that are already under the floor are in the reference: fixing one only lowers the bar.
+
+- Run it: `pnpm exec playwright install chromium`, then `pnpm e2e`. CI: `.github/workflows/editor-task-cost.yml`.
+- This repository has no demo app: the journey runs against the live `/fr/builder` page of the Krizaka UI site
+  (`BUILDER_BASE_URL`, `BUILDER_PATH` to point at another host), so it measures the published editor and the host page.
+- After a change that lowers a cost, record it: `UPDATE_REFERENCE=1 pnpm e2e`. A higher number is a regression, not an update.
+
 ## Plan (krizaka-internal#1889)
 
 1. C0 — the fork set up (this state): CI on the org's reusable workflows, protection, registry. Nothing published.
