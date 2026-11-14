@@ -5,6 +5,13 @@ import { Loader } from "../Loader";
 
 const getClassName = getClassNameFactory("IconButton", styles);
 
+/** « ⌘Z » or « Ctrl+Shift+Z » as the aria-keyshortcuts grammar (« Meta+Z », « Control+Shift+Z »). */
+const ariaShortcut = (shortcut: string) =>
+  shortcut
+    .replace("⌘", "Meta+")
+    .replace("⇧", "Shift+")
+    .replace("Ctrl", "Control");
+
 export const IconButton = forwardRef<
   HTMLButtonElement & HTMLAnchorElement,
   {
@@ -18,6 +25,10 @@ export const IconButton = forwardRef<
     newTab?: boolean;
     fullWidth?: boolean;
     title: string;
+    /** The keyboard shortcut, shown in the tooltip and announced (aria-keyshortcuts). */
+    shortcut?: string;
+    /** `large` is the 40 px target of the header's history buttons. */
+    size?: "default" | "large";
     suppressHydrationWarning?: boolean;
   }
 >(
@@ -33,6 +44,8 @@ export const IconButton = forwardRef<
       newTab,
       fullWidth,
       title,
+      shortcut,
+      size = "default",
       suppressHydrationWarning,
       ...rest
     },
@@ -41,6 +54,11 @@ export const IconButton = forwardRef<
     const [loading, setLoading] = useState(false);
 
     const ElementType = href ? "a" : "button";
+    const tooltip = {
+      title: shortcut ? `${title} (${shortcut})` : title,
+      "aria-keyshortcuts": shortcut ? ariaShortcut(shortcut) : undefined,
+      "data-size": size,
+    };
 
     return (
       <ElementType
@@ -65,8 +83,8 @@ export const IconButton = forwardRef<
         target={newTab ? "_blank" : undefined}
         rel={newTab ? "noreferrer" : undefined}
         href={href}
-        title={title}
         aria-label={title}
+        {...tooltip}
         suppressHydrationWarning={suppressHydrationWarning}
       >
         {children}

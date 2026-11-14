@@ -26,6 +26,8 @@ export type TaskMeasure = {
   actions: number | null;
   /** Tab presses from the top of the page to the last command. null: cannot be done with the keyboard. */
   tabStops: number | null;
+  /** Arrow-key presses inside a toolbar (#3547): a bar is one Tab stop, the arrows reach the rest. Not in `actions`. */
+  arrowKeys?: number;
   commands: CommandMeasure[];
 };
 
@@ -89,6 +91,8 @@ export type Focus = {
   name: string;
   rect: { w: number; h: number; cy: number };
   viewportHeight: number;
+  /** The element is inside a WAI-ARIA toolbar (one Tab stop for the bar). */
+  inToolbar: boolean;
 };
 
 export function activeFocus(page: Page): Promise<Focus | null> {
@@ -114,6 +118,7 @@ export function activeFocus(page: Page): Promise<Focus | null> {
       name: name.slice(0, 40),
       rect: { w: r.width, h: r.height, cy: offset + r.top + r.height / 2 },
       viewportHeight: window.innerHeight,
+      inToolbar: !!el.closest('[role="toolbar"]'),
     };
   });
 }
@@ -143,7 +148,42 @@ export function resetTabOrigin(page: Page): Promise<void> {
   });
 }
 
-/** Press Tab until the focus is on a button/tab named `name` (or a node whose text is `name`). null: never reached. */
+/* The arrow keys pressed inside toolbars during a task; playJourney reads and resets it. */
+const arrowPresses = new WeakMap<Page, number>();
+export const takeArrowKeys = (page: Page): number => {
+  const n = arrowPresses.get(page) ?? 0;
+  arrowPresses.set(page, 0);
+  return n;
+};
+const MAX_ARROWS = 12;
+
+const matches = (focus: Focus | null, name: RegExp, tag?: string) =>
+  !!focus && name.test(focus.name) && (!tag || focus.tag === tag);
+
+/**
+ * In a toolbar the Tab lands on one button; the arrows reach the others. Only the presses that reach `name` are counted
+ * (`takeArrowKeys`): a person who knows the bar does not walk the ones that miss.
+ */
+async function arrowTo(
+  page: Page,
+  name: RegExp,
+  tag?: string
+): Promise<Focus | null> {
+  for (let presses = 1; presses <= MAX_ARROWS; presses += 1) {
+    await page.keyboard.press("ArrowRight");
+    const focus = await activeFocus(page);
+    if (matches(focus, name, tag)) {
+      arrowPresses.set(page, (arrowPresses.get(page) ?? 0) + presses);
+      return focus;
+    }
+  }
+  return null;
+}
+
+/**
+ * Press Tab until the focus is on a button/tab named `name` (or a node whose text is `name`). Inside a toolbar, the
+ * arrows walk the bar once before the next Tab. null: never reached.
+ */
 export async function tabTo(
   page: Page,
   name: RegExp,
@@ -151,9 +191,10 @@ export async function tabTo(
 ): Promise<{ stops: number | null; focus: Focus | null }> {
   for (let stops = 1; stops <= MAX_TABS; stops += 1) {
     await page.keyboard.press("Tab");
-    const focus = await activeFocus(page);
-    if (focus && name.test(focus.name) && (!tag || focus.tag === tag))
-      return { stops, focus };
+    let focus = await activeFocus(page);
+    if (focus?.inToolbar && !matches(focus, name, tag))
+      focus = (await arrowTo(page, name, tag)) ?? focus;
+    if (matches(focus, name, tag)) return { stops, focus };
   }
   return { stops: null, focus: null };
 }

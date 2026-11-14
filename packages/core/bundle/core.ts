@@ -22,7 +22,7 @@ export {
 } from "../components/DropZone";
 export * from "../components/IconButton";
 export { InlineTextField } from "../components/InlineTextField";
-export { Puck } from "../components/Puck";
+export { Puck, type ContentLanguage } from "../components/Puck";
 export * from "../components/Render";
 
 export { dictionaryFr } from "../lib/dictionary-fr";

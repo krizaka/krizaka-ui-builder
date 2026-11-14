@@ -83,6 +83,8 @@ type PuckProps<
   }) => ReactElement;
   headerTitle?: string;
   headerPath?: string;
+  /** The content language of the page, shown in the header as a segmented control (krizaka-internal#3547). */
+  contentLanguage?: ContentLanguage;
   viewports?: Viewports;
   iframe?: IframeConfig;
   dnd?: DndConfig;
@@ -92,6 +94,12 @@ type PuckProps<
   height?: CSSProperties["height"];
   _experimentalFullScreenCanvas?: boolean;
   _experimentalVirtualization?: boolean;
+};
+
+export type ContentLanguage = {
+  value: string;
+  options: { value: string; label: string }[];
+  onChange: (value: string) => void;
 };
 
 const propsContext = createContext<Partial<PuckProps>>({});
@@ -178,20 +186,18 @@ function PuckProvider<
         ...clientUiState,
         // Store categories under componentList on state to allow render functions and plugins to modify
         componentList: config.categories
-          ? Object.entries(config.categories).reduce(
-              (acc, [categoryName, category]) => {
-                return {
-                  ...acc,
-                  [categoryName]: {
-                    title: category.title,
-                    components: category.components,
-                    expanded: category.defaultExpanded,
-                    visible: category.visible,
-                  },
-                };
-              },
-              {}
-            )
+          ? Object.keys(config.categories).reduce((acc, categoryName) => {
+              const category = config.categories![categoryName];
+              return {
+                ...acc,
+                [categoryName]: {
+                  title: category.title,
+                  components: category.components,
+                  expanded: category.defaultExpanded,
+                  visible: category.visible,
+                },
+              };
+            }, {})
           : {},
       },
     } as G["UserAppState"];

@@ -10,6 +10,7 @@ import styles from "./styles.module.css";
 import { useAppStore } from "../../store";
 import { useMessage } from "../../lib/use-message";
 import { isEscapeOutsideTextEntry } from "../../lib/keyboard";
+import { historyShortcut, isApplePlatform } from "../../lib/history-shortcut";
 
 const getClassName = getClassNameFactory("MenuBar", styles);
 
@@ -31,6 +32,7 @@ export function MenuBar<UserData extends Data>({
 
   const undoLabel = useMessage("header-undo");
   const redoLabel = useMessage("header-redo");
+  const apple = isApplePlatform();
 
   return (
     <div
@@ -59,6 +61,9 @@ export function MenuBar<UserData extends Data>({
           <IconButton
             type="button"
             title={undoLabel}
+            shortcut={historyShortcut("undo", apple)}
+            size="large"
+            suppressHydrationWarning
             disabled={!hasPast}
             onClick={back}
           >
@@ -67,6 +72,9 @@ export function MenuBar<UserData extends Data>({
           <IconButton
             type="button"
             title={redoLabel}
+            shortcut={historyShortcut("redo", apple)}
+            size="large"
+            suppressHydrationWarning
             disabled={!hasFuture}
             onClick={forward}
           >

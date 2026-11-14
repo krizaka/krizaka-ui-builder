@@ -10,6 +10,8 @@ import {
 import { Heading } from "../../../Heading";
 import { IconButton } from "../../../IconButton/IconButton";
 import { MenuBar } from "../../../MenuBar";
+import { SegmentedControl } from "../../../SegmentedControl";
+import { useRovingToolbar } from "../../../../lib/use-roving-toolbar";
 import { Button } from "../../../Button";
 import { Config, Overrides, UserGenerics } from "../../../../types";
 import { DefaultOverride } from "../../../DefaultOverride";
@@ -34,6 +36,7 @@ const HeaderInner = <
     renderHeaderActions,
     headerTitle,
     headerPath,
+    contentLanguage,
     iframe: _iframe,
   } = usePropsContext();
 
@@ -131,6 +134,10 @@ const HeaderInner = <
   const toggleLeftLabel = useMessage("header-toggle-leftsidebar");
   const toggleRightLabel = useMessage("header-toggle-rightsidebar");
   const toggleMenuLabel = useMessage("header-toggle-menubar");
+  const languageLabel = useMessage("header-content-language");
+  const barProps = useRovingToolbar<HTMLDivElement>({
+    label: useMessage("header-bar"),
+  });
 
   return (
     <CustomHeader
@@ -157,7 +164,7 @@ const HeaderInner = <
           hidePlugins,
         })}
       >
-        <div className={getClassName("inner")}>
+        <div className={getClassName("inner")} {...barProps}>
           <div className={getClassName("toggle")}>
             <div className={getClassName("leftSideBarToggle")}>
               <IconButton
@@ -194,6 +201,14 @@ const HeaderInner = <
             </Heading>
           </div>
           <div className={getClassName("tools")}>
+            {contentLanguage && (
+              <SegmentedControl
+                label={languageLabel}
+                value={contentLanguage.value}
+                options={contentLanguage.options}
+                onChange={contentLanguage.onChange}
+              />
+            )}
             <div className={getClassName("menuButton")}>
               <IconButton
                 type="button"

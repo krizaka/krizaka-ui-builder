@@ -1,0 +1,50 @@
+.SegmentedControl {
+  background: var(--puck-color-surface-subtle);
+  border: var(--puck-border-width-regular) solid var(--puck-color-border);
+  border-radius: var(--puck-radius-m);
+  display: inline-flex;
+  padding: 2px;
+}
+
+.SegmentedControl-option {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-radius: calc(var(--puck-radius-m) - 2px);
+  box-sizing: border-box;
+  color: var(--puck-color-text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--puck-font-size-xxs);
+  min-height: 34px;
+  min-width: 40px;
+  padding: 0 var(--puck-space-3);
+  transition: background-color var(--puck-duration-fast) var(--puck-ease-exit),
+    color var(--puck-duration-fast) var(--puck-ease-exit);
+}
+
+.SegmentedControl-option--selected {
+  background: var(--puck-color-interactive-soft);
+  color: var(--puck-color-interactive);
+  font-weight: var(--puck-font-weight-semibold);
+}
+
+.SegmentedControl-option:focus-visible {
+  outline: var(--puck-border-width-focus) solid var(--puck-color-focus-ring);
+  outline-offset: calc(var(--puck-border-width-focus) * -1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .SegmentedControl-option:hover:not(.SegmentedControl-option--selected) {
+    background: var(--puck-color-interactive-neutral-hover);
+    color: var(--puck-color-interactive);
+  }
+}
+
+/* A phone's thumb needs 44 px; the desk's pointer 34. */
+@media (max-width: 637px) {
+  .SegmentedControl-option {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

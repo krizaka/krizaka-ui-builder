@@ -66,6 +66,7 @@ const rowButtons = () =>
   Array.from(document.querySelectorAll<HTMLElement>("[data-puck-layer-row]"));
 const rowNames = () => rowButtons().map((b) => b.textContent);
 
+const onLanguage = jest.fn();
 const renderEditor = async (plugin: "outline" | "blocks") => {
   render(
     <Puck
@@ -73,9 +74,20 @@ const renderEditor = async (plugin: "outline" | "blocks") => {
       data={data}
       iframe={{ enabled: false }}
       plugins={[plugin === "outline" ? outlinePlugin() : blocksPlugin()]}
+      onPublish={() => undefined}
+      contentLanguage={{
+        value: "fr",
+        options: [
+          { value: "fr", label: "Français" },
+          { value: "en", label: "English" },
+        ],
+        onChange: onLanguage,
+      }}
     />
   );
   await flush();
+  // Puck stays hidden until it has measured itself; the accessible names are empty while it is.
+  document.querySelector<HTMLElement>(".Puck")!.style.visibility = "visible";
   // Puck is not visible to the accessibility tree until it has measured itself: open the plugin by its nav button
   fireEvent.click(
     screen.getAllByText(plugin === "outline" ? "Outline" : "Blocks")[0]
@@ -170,7 +182,8 @@ describe("the block list adds without dragging", () => {
   });
 });
 
-const navElement = () => document.querySelector("nav") as HTMLElement;
+const navElement = () =>
+  document.querySelector("[aria-label='Editor panels']") as HTMLElement;
 // The bar is the nav's sibling inside the bottom bar wrapper
 const selectedBar = () => {
   const bar = navElement().nextElementSibling;
@@ -219,6 +232,20 @@ describe("on a phone the frequent actions sit in the bottom bar", () => {
     expect(bar.getByLabelText("Move up")).toBeDisabled();
   });
 
+  it("is one toolbar: one Tab stop, the arrows move between the enabled buttons", async () => {
+    fireEvent.click(rowButtons()[1]);
+    await flush();
+    const bar = selectedBar()!;
+    const buttons = within(bar).getAllByRole("button", all);
+    expect(buttons.filter((b) => b.tabIndex === 0)).toHaveLength(1);
+    buttons[0].focus();
+    fireEvent.keyDown(buttons[0], { key: "ArrowRight" });
+    expect(document.activeElement).toBe(buttons[1]);
+    fireEvent.keyDown(buttons[1], { key: "End" });
+    expect(document.activeElement).toBe(buttons[3]);
+    expect(buttons.filter((b) => b.tabIndex === 0)).toEqual([buttons[3]]);
+  });
+
   it("Duplicate and Remove act on the selected block", async () => {
     fireEvent.click(rowButtons()[1]);
     await flush();
@@ -229,5 +256,74 @@ describe("on a phone the frequent actions sit in the bottom bar", () => {
     fireEvent.click(within(selectedBar()!).getByLabelText("Remove"));
     await flush();
     expect(rowNames()).toHaveLength(3);
+  });
+});
+
+const tabStops = (bar: HTMLElement) =>
+  within(bar)
+    .getAllByRole("button", all)
+    .filter((b) => b.getAttribute("tabindex") === "0");
+
+describe("the header", () => {
+  beforeEach(() => renderEditor("outline"));
+
+  it("holds one primary action", () => {
+    const header = screen.getByRole("banner", all);
+    expect(header.querySelectorAll("[data-variant='primary']")).toHaveLength(1);
+    expect(within(header).getByText("Publish")).toBeInTheDocument();
+  });
+
+  it("holds the content language as a segmented control that tells the chosen one", () => {
+    const header = screen.getByRole("banner", all);
+    const group = within(header).getByRole("group", {
+      name: "Content language",
+      ...all,
+    });
+    const [fr, en] = within(group).getAllByRole("button", all);
+    expect(fr).toHaveAttribute("aria-pressed", "true");
+    expect(en).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(en);
+    expect(onLanguage).toHaveBeenCalledWith("en");
+  });
+
+  it("gives Undo and Redo a 40 px size, a tooltip and their shortcut", () => {
+    const header = screen.getByRole("banner", all);
+    const undo = within(header).getByRole("button", { name: "undo", ...all });
+    const redo = within(header).getByRole("button", { name: "redo", ...all });
+    expect(undo).toHaveAttribute("data-size", "large");
+    expect(redo).toHaveAttribute("data-size", "large");
+    expect(undo).toHaveAttribute("title", "undo (Ctrl+Z)");
+    expect(undo).toHaveAttribute("aria-keyshortcuts", "Control+Z");
+    expect(redo).toHaveAttribute("title", "redo (Ctrl+Shift+Z)");
+  });
+
+  it("is one toolbar with one Tab stop and arrow keys inside", async () => {
+    const header = screen.getByRole("toolbar", {
+      name: "Page actions",
+      ...all,
+    });
+    await flush();
+    const [stop] = tabStops(header);
+    expect(tabStops(header)).toHaveLength(1);
+    stop.focus();
+    fireEvent.keyDown(stop, { key: "ArrowRight" });
+    expect(header.contains(document.activeElement)).toBe(true);
+    expect(document.activeElement).not.toBe(stop);
+    expect(tabStops(header)).toEqual([document.activeElement]);
+  });
+});
+
+describe("the panel bar", () => {
+  beforeEach(() => renderEditor("outline"));
+
+  it("is one toolbar with one Tab stop", async () => {
+    const bar = screen.getByRole("toolbar", { name: "Editor panels", ...all });
+    await flush();
+    expect(tabStops(bar)).toHaveLength(1);
+    const buttons = within(bar).getAllByRole("button", all);
+    expect(buttons.length).toBeGreaterThan(1);
+    buttons[0].focus();
+    fireEvent.keyDown(buttons[0], { key: "ArrowDown" });
+    expect(document.activeElement).toBe(buttons[1]);
   });
 });

@@ -56,3 +56,9 @@
     var(--puck-color-text-subtle)
   );
 }
+
+.IconButton[data-size="large"] {
+  box-sizing: border-box;
+  height: 40px;
+  min-width: 40px;
+}

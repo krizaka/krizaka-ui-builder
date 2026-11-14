@@ -66,6 +66,7 @@ export const Button = ({
       target={newTab ? "_blank" : undefined}
       rel={newTab ? "noreferrer" : undefined}
       href={href}
+      data-variant={variant}
       {...dataAttrs}
     >
       {icon && <div className={getClassName("icon")}>{icon}</div>}

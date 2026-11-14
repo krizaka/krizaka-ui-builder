@@ -29,7 +29,7 @@ export function belowFloor(cell: CellMeasure, screen: Screen): string[] {
   return [...new Set(names)].sort();
 }
 
-/* Commands the editor does not own: the host page's content-language switch sits in the host's header. */
+/* The content-language switch sits in the editor's header at the top of the page, by design (#3547): the thumb zone is for the bottom bar. */
 const HOST_COMMANDS = new Set(["content language"]);
 
 /** T1 (#3546): on a phone every level A and B command of the editor is within the thumb's reach, the lower 40 %. */

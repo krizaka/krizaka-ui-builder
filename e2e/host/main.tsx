@@ -11,7 +11,7 @@ import {
 } from "@krizaka/ui-builder";
 
 /* The page that hosts the editor for the editor-cost journey: the branch's own build, a French/English page, nine
-   blocks (so the block search shows up) and a content-language switch. It stands for the host site of the live demo. */
+   blocks (so the block search shows up) and the editor's own content-language switch (#3547). It stands for the host site of the live demo. */
 
 type TextProps = { text: string };
 const BLOCKS: Record<string, [string, (p: TextProps) => JSX.Element]> = {
@@ -63,42 +63,32 @@ const initial: Data = {
 
 type Language = "fr" | "en";
 
+const LANGUAGES = [
+  { value: "fr", label: "Français" },
+  { value: "en", label: "English" },
+];
+
 const Host = () => {
   const [language, setLanguage] = useState<Language>("fr");
-  const button = (value: Language, label: string) => (
-    <button
-      type="button"
-      data-variant={language === value ? "primary" : "secondary"}
-      onClick={() => setLanguage(value)}
-    >
-      {label}
-    </button>
-  );
 
   return (
-    <>
-      <header>
-        {button("fr", "Français")}
-        {button("en", "English")}
-      </header>
-      <div
-        className="kz-builder-editor"
-        style={{
-          height: "calc(100dvh - 72px)",
-        }} /* the editor fills what is left under the header */
-      >
-        <Puck
-          config={config}
-          height="100%"
-          data={initial}
-          dictionary={language === "fr" ? dictionaryFr : dictionaryEn}
-          plugins={[
-            blocksPlugin({ label: language === "fr" ? "Blocs" : "Blocks" }),
-            outlinePlugin({ label: language === "fr" ? "Plan" : "Outline" }),
-          ]}
-        />
-      </div>
-    </>
+    <div className="kz-builder-editor" style={{ height: "100dvh" }}>
+      <Puck
+        config={config}
+        height="100%"
+        data={initial}
+        dictionary={language === "fr" ? dictionaryFr : dictionaryEn}
+        contentLanguage={{
+          value: language,
+          options: LANGUAGES,
+          onChange: (value) => setLanguage(value as Language),
+        }}
+        plugins={[
+          blocksPlugin({ label: language === "fr" ? "Blocs" : "Blocks" }),
+          outlinePlugin({ label: language === "fr" ? "Plan" : "Outline" }),
+        ]}
+      />
+    </div>
   );
 };
 
