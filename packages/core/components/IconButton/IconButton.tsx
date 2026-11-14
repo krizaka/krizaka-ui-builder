@@ -54,6 +54,11 @@ export const IconButton = forwardRef<
     const [loading, setLoading] = useState(false);
 
     const ElementType = href ? "a" : "button";
+    const tooltip = {
+      title: shortcut ? `${title} (${shortcut})` : title,
+      "aria-keyshortcuts": shortcut ? ariaShortcut(shortcut) : undefined,
+      "data-size": size,
+    };
 
     return (
       <ElementType
@@ -63,7 +68,6 @@ export const IconButton = forwardRef<
           active,
           disabled,
           fullWidth,
-          large: size === "large",
         })}
         onClick={(e) => {
           if (!onClick) return;
@@ -79,10 +83,8 @@ export const IconButton = forwardRef<
         target={newTab ? "_blank" : undefined}
         rel={newTab ? "noreferrer" : undefined}
         href={href}
-        title={shortcut ? `${title} (${shortcut})` : title}
         aria-label={title}
-        aria-keyshortcuts={shortcut ? ariaShortcut(shortcut) : undefined}
-        data-size={size}
+        {...tooltip}
         suppressHydrationWarning={suppressHydrationWarning}
       >
         {children}
