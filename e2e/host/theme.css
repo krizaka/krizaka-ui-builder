@@ -1,0 +1,72 @@
+/* The editor in the host's dark theme, copied from the live host (krizaka-ui, apps/site/app/globals.css, « /builder: the editor in the
+   site's themes »): Puck's palette is a light one; in dark the grey and azure scales are read from the other end, white and black swap
+   and the named colours are resolved again. The theme itself is the @krizaka/ui one: <html class="light"> is light, no class is dark. */
+html:not(.light) .kz-builder-editor {
+  --puck-color-grey-01: #fafafa;
+  --puck-color-grey-02: #f5f5f5;
+  --puck-color-grey-03: #efefef;
+  --puck-color-grey-04: #dcdcdc;
+  --puck-color-grey-05: #c3c3c3;
+  --puck-color-grey-06: #ababab;
+  --puck-color-grey-07: #949494;
+  --puck-color-grey-08: #767676;
+  --puck-color-grey-09: #5a5a5a;
+  --puck-color-grey-10: #404040;
+  --puck-color-grey-11: #292929;
+  --puck-color-grey-12: #181818;
+  --puck-color-azure-01: #f7faff;
+  --puck-color-azure-02: #f3f6fb;
+  --puck-color-azure-03: #e7eef7;
+  --puck-color-azure-04: #cfdff0;
+  --puck-color-azure-05: #abc7e5;
+  --puck-color-azure-06: #88b0da;
+  --puck-color-azure-07: #6499cf;
+  --puck-color-azure-08: #3479be;
+  --puck-color-azure-09: #0158ad;
+  --puck-color-azure-10: #014292;
+  --puck-color-azure-11: #002c77;
+  --puck-color-azure-12: #00175d;
+  --puck-color-white: #101012;
+  --puck-color-black: #ffffff;
+  color-scheme: dark;
+  /* The names built on those scales, declared again here so they are resolved against the dark ones (a custom property
+     keeps the value it had where it was declared). */
+  --puck-color-surface: var(--puck-color-white);
+  --puck-color-surface-muted: var(--puck-color-grey-11);
+  --puck-color-surface-subtle: var(--puck-color-grey-12);
+  --puck-color-surface-inverse: var(--puck-color-grey-01);
+  --puck-color-border: var(--puck-color-grey-09);
+  --puck-color-border-hover: var(--puck-color-grey-05);
+  --puck-color-border-muted: var(--puck-color-grey-10);
+  --puck-color-border-inverse: var(--puck-color-grey-05);
+  --puck-color-text: var(--puck-color-black);
+  --puck-color-text-secondary: var(--puck-color-grey-04);
+  --puck-color-text-muted: var(--puck-color-grey-05);
+  --puck-color-text-subtle: var(--puck-color-grey-07);
+  --puck-color-text-inverse: var(--puck-color-white);
+  --puck-color-interactive: var(--puck-color-azure-04);
+  --puck-color-interactive-hover: var(--puck-color-azure-03);
+  --puck-color-interactive-active: var(--puck-color-azure-02);
+  --puck-color-interactive-subtle: var(--puck-color-azure-10);
+  --puck-color-interactive-soft: var(--puck-color-azure-11);
+  --puck-color-interactive-soft-hover: var(--puck-color-azure-12);
+  --puck-color-interactive-neutral-hover: var(--puck-color-grey-10);
+  --puck-color-interactive-inverse-hover: var(--puck-color-azure-06);
+  --puck-color-interactive-inverse-active: var(--puck-color-azure-07);
+  --puck-color-focus-ring: var(--puck-color-azure-05);
+  --puck-color-selection-bg: color-mix(
+    in srgb,
+    var(--puck-color-azure-09) 30%,
+    transparent
+  );
+  --puck-color-selection-border: var(--puck-color-azure-08);
+  --puck-color-line-placeholder: var(--puck-color-azure-06);
+  --puck-color-highlight: var(--puck-color-rose-07);
+  --puck-color-bg-disabled: var(--puck-color-grey-07);
+  --puck-color-text-disabled: var(--puck-color-grey-03);
+  --puck-color-overlay-backdrop: color-mix(
+    in srgb,
+    var(--puck-color-black) 75%,
+    transparent
+  );
+}

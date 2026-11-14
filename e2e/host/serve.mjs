@@ -28,13 +28,14 @@ await copyFile(
   join(root, "packages/core/dist/index.css"),
   join(out, "puck.css")
 );
+await copyFile(join(here, "theme.css"), join(out, "theme.css"));
 await copyFile(join(here, "index.html"), join(out, "index.html"));
 
+const ASSETS = new Set(["/main.js", "/puck.css", "/theme.css"]);
 const TYPES = { ".js": "text/javascript", ".css": "text/css" };
 createServer(async (req, res) => {
   const path = new URL(req.url ?? "/", "http://localhost").pathname;
-  const asset =
-    path === "/main.js" || path === "/puck.css" ? path : "/index.html";
+  const asset = ASSETS.has(path) ? path : "/index.html";
   const ext = asset.slice(asset.lastIndexOf("."));
   res.setHeader("content-type", TYPES[ext] ?? "text/html; charset=utf-8");
   res.end(await readFile(join(out, asset)));

@@ -87,7 +87,7 @@
   background: transparent;
   border: 0;
   border-radius: var(--puck-drawer-item-radius, var(--puck-radius-m));
-  color: inherit;
+  color: var(--puck-color-text);
   cursor: pointer;
 }
 

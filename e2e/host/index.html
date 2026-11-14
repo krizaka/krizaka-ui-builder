@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Builder</title>
     <link rel="stylesheet" href="/puck.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <script>
+      /* What ThemeScript of @krizaka/ui does: the stored mode (kz-theme: dark | light | system, default system) puts the class "light" on <html>. */
+      (function () {
+        var mode = null;
+        try {
+          mode = localStorage.getItem("kz-theme");
+        } catch (e) {}
+        var dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.classList.toggle(
+          "light",
+          mode === "light" || (mode !== "dark" && !dark)
+        );
+      })();
+    </script>
     <style>
       body {
         margin: 0;
