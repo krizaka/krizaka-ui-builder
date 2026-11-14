@@ -6,8 +6,9 @@ const config: Config = {
 
   // The lcov report the SonarCloud CI analysis reads (ci.yml sonar-coverage-paths).
   collectCoverage: true,
-  // projectRoot: the SF paths are relative to the repository root, where the scanner runs.
-  coverageReporters: [["lcov", { projectRoot: "../.." }], "text-summary"],
+  // The lcov paths stay relative to this package (SF:src/…): the shared CI rebases them to the repository root
+  // for SonarCloud; a root-relative report would be prefixed twice (krizaka-internal#3553).
+  coverageReporters: ["lcov", "text-summary"],
   coverageDirectory: "coverage",
 
   // Treat these files as ESM so `import`/`export` keep working
