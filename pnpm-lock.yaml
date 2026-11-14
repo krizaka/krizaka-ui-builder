@@ -28,6 +28,9 @@ importers:
       asciichart:
         specifier: ^1.5.25
         version: 1.5.25
+      esbuild:
+        specifier: 0.28.2
+        version: 0.28.2
       eslint:
         specifier: ^9.0.0
         version: 9.39.4(supports-color@7.2.0)
@@ -37,6 +40,12 @@ importers:
       prettier:
         specifier: ^2.5.1
         version: 2.8.8
+      react:
+        specifier: 19.2.6
+        version: 19.2.6
+      react-dom:
+        specifier: 19.2.6
+        version: 19.2.6(react@19.2.6)
       rimraf:
         specifier: ^6.1.3
         version: 6.1.3

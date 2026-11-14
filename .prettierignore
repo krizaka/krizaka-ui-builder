@@ -10,3 +10,6 @@ coverage/
 
 # Lockfiles are written by their package manager, never by a formatter
 pnpm-lock.yaml
+
+# The e2e host page bundle, built on demand
+e2e/host/.dist/

@@ -26,9 +26,25 @@ worked can no longer be done (`null` means "cannot be done"), or when a new leve
 32 px on the desk. Today's commands that are already under the floor are in the reference: fixing one only lowers the bar.
 
 - Run it: `pnpm exec playwright install chromium`, then `pnpm e2e`. CI: `.github/workflows/editor-task-cost.yml`.
-- This repository has no demo app: the journey runs against the live `/fr/builder` page of the Krizaka UI site
-  (`BUILDER_BASE_URL`, `BUILDER_PATH` to point at another host), so it measures the published editor and the host page.
+- The journey runs against the editor built from THIS branch: `e2e/host` is a small host page (French/English, nine blocks,
+  a content-language switch) bundled by `e2e/host/serve.mjs` against `packages/core/dist`, so run `pnpm build` first (CI does).
+  Set `BUILDER_BASE_URL` (and `BUILDER_PATH`) to measure another host instead, such as the live `/fr/builder` page.
+- Without dragging (krizaka-internal#3545): the journey adds with the « Add » button of a block-list row, moves with the block
+  bar's Move up or the outline's Alt+↑ / Alt+↓, and an Undo only counts when the removed block is back. A drag is for a fine
+  pointer only (`lib/dnd/fine-pointer.ts`).
 - After a change that lowers a cost, record it: `UPDATE_REFERENCE=1 pnpm e2e`. A higher number is a regression, not an update.
+
+## Moving, adding and removing blocks without dragging (krizaka-internal#3545)
+
+- The block bar (Move up, Move down, Add after, Duplicate, Remove, Parent block), the outline row menu and Alt+↑ / Alt+↓,
+  and the « Add » button of each block-list row all call `lib/block-actions.ts`, which dispatches the reducer actions (the
+  drag's own door). The same operations on a stored document are in `document/operations.ts` (`removeBlock`, `moveBlock`,
+  `duplicateBlock`, krizaka-internal#3449): pure, typed refusals, the caller gives the id of a copy.
+- The editor's words: `lib/dictionary.ts` (English) and `lib/dictionary-fr.ts` (`dictionaryFr`, every key; a test keeps the
+  two in step). A host passes `dictionary={dictionaryFr}`.
+- Fork divergence, kept small: `Drawer` (an `onAdd` button), `DraggableComponent` (the bar's buttons, bottom-anchored so a
+  taller bar never covers the block's first line), `layer` / `layer-actions` (row keys and menu), `use-sensors` (fine pointer
+  only), `history` slice (Undo flushes a change that is still waiting for its debounce, so Undo right after Remove works).
 
 ## Plan (krizaka-internal#1889)
 

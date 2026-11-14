@@ -39,10 +39,14 @@ export const LABELS = {
   redo: /^(rétablir|redo)$/i,
   menuToggle: /barre de menu|menu bar/i,
   remove: /^(supprimer|delete|remove)$/i,
+  moveUp: /^(monter|move up)$/i,
   blocksTab: /^(blocs|blocks)$/i,
   outlineTab: /^(plan|outline)$/i,
   contentLanguage: /^english$/i,
 } as const;
+
+/** The « Add » button of the Citation row of the block list. */
+export const ADD_CITATION = /^(ajouter|add) citation$/i;
 
 export const EDITOR = ".kz-builder-editor";
 const PREVIEW = `${EDITOR} iframe`;

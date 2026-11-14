@@ -15,6 +15,8 @@ function resetStores() {
 
 describe("history slice", () => {
   beforeEach(() => {
+    // A change recorded by the previous test is still waiting for its debounce: settle it, so it cannot leak in here
+    appStore.getState().history.record.flush();
     resetStores();
   });
 

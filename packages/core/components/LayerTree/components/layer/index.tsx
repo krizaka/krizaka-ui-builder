@@ -1,5 +1,12 @@
 import { ChevronRight, LayoutGrid, Type } from "lucide-react";
-import { ForwardedRef, forwardRef, useCallback, useContext } from "react";
+import {
+  ForwardedRef,
+  forwardRef,
+  KeyboardEvent,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
 
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import { getItem, ItemSelector } from "../../../../lib/data/get-item";
@@ -18,6 +25,7 @@ import { DropLine } from "../drop-line";
 import { LayerActions } from "../layer-actions";
 import { LayerTreeZone } from "../layer-tree-zone";
 import { useMessage } from "../../../../lib/use-message";
+import { useLayerMove } from "../../lib/use-layer-move";
 
 const getClassName = getClassNameFactory("Layer", styles);
 
@@ -77,6 +85,16 @@ export const Layer = forwardRef(function Layer(
   const expandMsg = useMessage("outline-item-expand");
 
   const containsZone = node.childZones.length > 0;
+  const [hasFocus, setHasFocus] = useState(false);
+  const { move } = useLayerMove(node);
+
+  // Alt+↑ / Alt+↓ move the row without dragging; the row keeps the focus.
+  const onRowKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
+    if (!e.altKey || !["ArrowUp", "ArrowDown"].includes(e.key)) return;
+    e.preventDefault();
+    if (outlineStore.getState().status !== "idle") return;
+    void move(e.key === "ArrowUp" ? "up" : "down");
+  };
 
   const setItemSelector = useCallback(
     (itemSelector: ItemSelector | null) => {
@@ -115,6 +133,10 @@ export const Layer = forwardRef(function Layer(
       <div
         className={getClassName("inner")}
         ref={rowRef}
+        onFocus={() => setHasFocus(true)}
+        onBlur={(e) =>
+          setHasFocus(e.currentTarget.contains(e.relatedTarget as Node | null))
+        }
         onMouseEnter={(e) => {
           e.stopPropagation();
 
@@ -169,6 +191,8 @@ export const Layer = forwardRef(function Layer(
           <button
             type="button"
             className={getClassName("clickable")}
+            data-puck-layer-row
+            onKeyDown={onRowKeyDown}
             onClick={() => {
               // Clicks during or just after a drag must not change selection
               if (outlineStore.getState().status !== "idle") {
@@ -196,7 +220,10 @@ export const Layer = forwardRef(function Layer(
               <div className={getClassName("name")}>{node.label}</div>
             </div>
           </button>
-          <LayerActions node={node} visible={isHovering && !isDragSource} />
+          <LayerActions
+            node={node}
+            visible={(isHovering || isSelected || hasFocus) && !isDragSource}
+          />
         </div>
       </div>
       {containsZone &&

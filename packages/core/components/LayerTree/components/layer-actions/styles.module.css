@@ -23,3 +23,62 @@
   height: var(--_puck-outline-caret-size);
   width: var(--_puck-outline-caret-size);
 }
+
+.LayerActions-menu {
+  background: var(--puck-color-surface, #fff);
+  border: var(--puck-border-width-regular) solid var(--puck-color-border);
+  border-radius: var(--puck-radius-m);
+  box-shadow: var(--puck-shadow-m, 0 4px 16px rgb(0 0 0 / 0.16));
+  display: flex;
+  flex-direction: column;
+  inset-block-start: 100%;
+  inset-inline-end: 0;
+  min-width: 180px;
+  padding: var(--puck-space-1);
+  position: absolute;
+  z-index: 3;
+}
+
+.LayerActions-menuItem,
+.LayerActions-menuSelect {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: var(--puck-radius-s, 4px);
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  gap: var(--puck-space-2);
+  min-height: 44px;
+  padding-inline: var(--puck-space-2);
+  text-align: start;
+}
+
+.LayerActions-menuItem:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.LayerActions-menuItem:hover:not(:disabled),
+.LayerActions-menuItem:focus-visible {
+  background: var(--puck-color-interactive-soft-hover);
+}
+
+.LayerActions-menuSelect {
+  background: var(--puck-color-surface, #fff);
+  border: var(--puck-border-width-regular) solid var(--puck-color-border);
+}
+
+/* The row's buttons: 32px on a desk, 44px on a coarse pointer. */
+.LayerActions > button {
+  min-height: 32px;
+  min-width: 32px;
+}
+
+@media (pointer: coarse), (max-width: 600px) {
+  .LayerActions > button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

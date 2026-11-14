@@ -8,13 +8,18 @@ const getActionClassName = getClassNameFactory("ActionBarAction", styles);
 
 export const ActionBar = ({
   label,
+  toolbarLabel,
   children,
 }: {
   label?: string;
+  /** Names the bar for a screen reader: a toolbar of the block's actions. */
+  toolbarLabel?: string;
   children?: ReactNode;
 }) => (
   <div
     className={getClassName()}
+    role={toolbarLabel ? "toolbar" : undefined}
+    aria-label={toolbarLabel}
     onKeyDown={stopActivationKey}
     onClick={(e) => {
       e.stopPropagation();

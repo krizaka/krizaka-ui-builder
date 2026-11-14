@@ -13,6 +13,7 @@ import { generateId } from "../../lib/generate-id";
 import { useDragListener } from "../DragDropContext";
 import { useSafeId } from "../../lib/use-safe-id";
 import { useDraggable, useDroppable } from "@dnd-kit/react";
+import { Plus } from "lucide-react";
 import { Feedback } from "@dnd-kit/dom";
 import { ZoneStoreContext } from "../DropZone/context";
 import { useDropAnimation } from "../DragDropContext/use-drop-animation";
@@ -75,12 +76,16 @@ const DrawerItemDraggable = ({
   label,
   id,
   isDragDisabled,
+  onAdd,
+  addLabel,
 }: {
   children?: (props: { children: ReactNode; name: string }) => ReactElement;
   name: string;
   label?: string;
   id: string;
   isDragDisabled?: boolean;
+  onAdd?: () => void;
+  addLabel?: string;
 }) => {
   const zoneStore = useContext(ZoneStoreContext);
   const dropAnimation = useDropAnimation(zoneStore);
@@ -110,6 +115,18 @@ const DrawerItemDraggable = ({
           {children}
         </DrawerItemInner>
       </div>
+      {onAdd && (
+        <button
+          type="button"
+          className={getClassName("add")}
+          onClick={onAdd}
+          aria-label={addLabel}
+          title={addLabel}
+          disabled={isDragDisabled}
+        >
+          <Plus aria-hidden="true" />
+        </button>
+      )}
     </div>
   );
 };
@@ -121,6 +138,8 @@ const DrawerItem = ({
   label,
   index,
   isDragDisabled,
+  onAdd,
+  addLabel,
 }: {
   name: string;
   children?: (props: { children: ReactNode; name: string }) => ReactElement;
@@ -128,6 +147,9 @@ const DrawerItem = ({
   label?: string;
   index?: number; // TODO deprecate
   isDragDisabled?: boolean;
+  /** An « Add » button on the row: the way to insert without dragging. */
+  onAdd?: () => void;
+  addLabel?: string;
 }) => {
   const resolvedId = id || name;
   const [dynamicId, setDynamicId] = useState(generateId(resolvedId));
@@ -153,6 +175,8 @@ const DrawerItem = ({
         label={label}
         id={dynamicId}
         isDragDisabled={isDragDisabled}
+        onAdd={onAdd}
+        addLabel={addLabel}
       >
         {children}
       </DrawerItemDraggable>

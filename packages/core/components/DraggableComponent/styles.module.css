@@ -116,7 +116,7 @@
   cursor: grab;
   display: flex;
   box-sizing: border-box;
-  transform-origin: right top;
+  transform-origin: right bottom;
   min-height: 36px;
 }
 

@@ -4,6 +4,7 @@ import { PointerActivationConstraints } from "@dnd-kit/dom";
 import type { Draggable, PointerSensorOptions } from "@dnd-kit/dom";
 import type { ActivationConstraint } from "@dnd-kit/abstract";
 import isDraggingFromHandle from "./is-dragging-from-handle";
+import { isFinePointer } from "./fine-pointer";
 
 const { Delay, Distance } = PointerActivationConstraints;
 
@@ -40,8 +41,17 @@ type UseSensorsOptions = {
         event: PointerEvent,
         source: Draggable
       ) => ActivationConstraints | undefined);
-  /** Elements that can start a drag. Defaults to the handle, or the element. */
+  /** Elements that can start a drag. Defaults to the handle, or the element. Always none on a coarse pointer. */
   activatorElements?: PointerSensorOptions["activatorElements"];
+};
+
+const startElements = (
+  option: UseSensorsOptions["activatorElements"],
+  source: Draggable
+) => {
+  if (typeof option === "function") return option(source);
+
+  return option ?? [source.handle ?? source.element];
 };
 
 export const useSensors = (
@@ -57,7 +67,8 @@ export const useSensors = (
 ) => {
   const [sensors] = useState(() => [
     PointerSensor.configure({
-      activatorElements,
+      activatorElements: (source) =>
+        isFinePointer() ? startElements(activatorElements, source) : [],
       activationConstraints(event, source) {
         const { pointerType } = event;
 

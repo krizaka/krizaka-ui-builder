@@ -43,3 +43,5 @@ dist
 # playwright
 test-results/
 playwright-report/
+
+e2e/host/.dist/

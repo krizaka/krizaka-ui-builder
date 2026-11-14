@@ -30,3 +30,13 @@ export {
   type MigrationResult,
 } from "./migrate";
 export { fromPuckData } from "./from-puck";
+export {
+  removeBlock,
+  moveBlock,
+  duplicateBlock,
+  OPERATION_ERRORS,
+  MOVE_DIRECTIONS,
+  type OperationError,
+  type OperationResult,
+  type MoveDirection,
+} from "./operations";
