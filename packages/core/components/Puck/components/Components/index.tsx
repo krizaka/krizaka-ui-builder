@@ -53,17 +53,12 @@ export const Components = () => {
   }, [overrides]);
 
   const searching = blockCount >= BLOCK_SEARCH_FROM;
+  const list = componentList ?? <ComponentList id="all" />;
 
   return (
     <Wrapper>
       {searching && <BlockSearch value={query} onChange={setQuery} />}
-      {searching && query.trim() ? (
-        <SearchResults query={query} />
-      ) : componentList ? (
-        componentList
-      ) : (
-        <ComponentList id="all" />
-      )}
+      {searching && query.trim() ? <SearchResults query={query} /> : list}
     </Wrapper>
   );
 };
