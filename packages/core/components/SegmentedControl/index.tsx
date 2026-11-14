@@ -2,6 +2,10 @@ import getClassNameFactory from "../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
 
 const getClassName = getClassNameFactory("SegmentedControl", styles);
+const getOptionClassName = getClassNameFactory(
+  "SegmentedControl-option",
+  styles
+);
 
 export type SegmentedOption = { value: string; label: string };
 
@@ -27,9 +31,7 @@ export const SegmentedControl = ({
         type="button"
         lang={option.value}
         aria-pressed={option.value === value}
-        className={getClassName("option", {
-          selected: option.value === value,
-        })}
+        className={getOptionClassName({ selected: option.value === value })}
         onClick={() => option.value !== value && onChange(option.value)}
       >
         {option.label}
