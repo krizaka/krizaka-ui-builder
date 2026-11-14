@@ -32,6 +32,10 @@ worked can no longer be done (`null` means "cannot be done"), or when a new leve
 - Without dragging (krizaka-internal#3545): the journey adds with the « Add » button of a block-list row, moves with the block
   bar's Move up or the outline's Alt+↑ / Alt+↓, and an Undo only counts when the removed block is back. A drag is for a fine
   pointer only (`lib/dnd/fine-pointer.ts`).
+- On a phone (#3546): under 638 px Undo is a bottom-bar item (`Layout`, next to the panels) and the selected block's
+  floating bar (`Puck/components/SelectedBlockBar`, 44 px targets, tokens only) sits above it. The test also fails when a level
+  A or B command of the editor sits above 60 % of the screen height on the phone (`outOfReach`; the host's own content-language
+  switch is exempt). The bar adds Tab stops on the phone/keyboard cell (move 19 -> 23, undo 4 -> 7 with one action fewer): recorded in the reference.
 - After a change that lowers a cost, record it: `UPDATE_REFERENCE=1 pnpm e2e`. A higher number is a regression, not an update.
 
 ## Moving, adding and removing blocks without dragging (krizaka-internal#3545)

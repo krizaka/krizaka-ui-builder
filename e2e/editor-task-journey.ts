@@ -120,11 +120,19 @@ const citationRow = (page: Page) =>
   outlineRows(page)
     .filter({ hasText: /Citation|Quote/ })
     .first();
-const moveUpButton = (page: Page) =>
-  page
+/* The block's command: on a phone the floating bar above the bottom bar (#3546), else the bar inside the preview. */
+const blockCommand = async (page: Page, name: RegExp) => {
+  const floating = page
+    .locator(".kz-builder-editor")
+    .getByRole("toolbar")
+    .getByRole("button", { name })
+    .first();
+  if (await floating.isVisible()) return floating;
+  return page
     .frameLocator(".kz-builder-editor iframe")
     .first()
-    .getByRole("button", { name: LABELS.moveUp });
+    .getByRole("button", { name });
+};
 
 async function movedUp(page: Page, before: string[]): Promise<boolean> {
   return settled(page, async () => {
@@ -150,13 +158,9 @@ async function moveByPointer({ page }: Journey): Promise<TaskMeasure> {
   actions += 1;
   await page.mouse.move(2, 2); // only the selected block keeps its bar
   await page.waitForTimeout(400);
-  const command = await measureShown(
-    page,
-    moveUpButton(page),
-    "Move up (block bar)",
-    "B"
-  );
-  await moveUpButton(page).click();
+  const moveUp = await blockCommand(page, LABELS.moveUp);
+  const command = await measureShown(page, moveUp, "Move up (block bar)", "B");
+  await moveUp.click();
   actions += 1;
   return (await movedUp(page, before))
     ? done(actions, 0, [command])
@@ -192,10 +196,7 @@ async function removeByPointer({ page, memo }: Journey): Promise<TaskMeasure> {
     .click({ position: { x: 20, y: 4 } });
   await page.mouse.move(2, 2); // drop the hover bar: only the selected block keeps its bar
   await page.waitForTimeout(400);
-  const button = page
-    .frameLocator(".kz-builder-editor iframe")
-    .first()
-    .getByRole("button", { name: LABELS.remove });
+  const button = await blockCommand(page, LABELS.remove);
   const command = await measureShown(page, button, "Delete (block bar)", "C");
   await button.click();
   return (await settled(
@@ -237,7 +238,10 @@ const undoApplied = async (
 
 async function undoByPointer({ page, memo }: Journey): Promise<TaskMeasure> {
   const editor = page.locator(".kz-builder-editor");
-  const undo = editor.getByRole("button", { name: LABELS.undo });
+  const undo = editor
+    .getByRole("button", { name: LABELS.undo })
+    .filter({ visible: true })
+    .first();
   const toggle = editor.getByRole("button", { name: LABELS.menuToggle });
   const commands: CommandMeasure[] = [];
   let actions = 0;
@@ -274,6 +278,8 @@ async function undoByKeyboard({ page, memo }: Journey): Promise<TaskMeasure> {
     !(await page
       .locator(".kz-builder-editor")
       .getByRole("button", { name: LABELS.undo })
+      .filter({ visible: true })
+      .first()
       .isVisible())
   ) {
     const reached = await tabTo(page, LABELS.menuToggle);
