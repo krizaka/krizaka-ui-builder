@@ -1,0 +1,50 @@
+/* A phone only: from 638px up the bar inside the preview is enough. */
+.SelectedBlockBar {
+  display: none;
+}
+
+@media (max-width: 637px) {
+  .SelectedBlockBar {
+    display: flex;
+    gap: var(--puck-space-1);
+    justify-content: center;
+    padding: var(--puck-space-1);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, calc(var(--puck-space-2) * -1));
+    background: var(--puck-color-surface-inverse);
+    border-radius: var(--puck-radius-l);
+    box-shadow: var(--puck-shadow-l, 0 2px 8px rgb(0 0 0 / 0.25));
+    z-index: 2;
+  }
+}
+
+.SelectedBlockBar-button {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: var(--puck-radius-m);
+  box-sizing: border-box;
+  color: var(--puck-color-text-inverse);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.SelectedBlockBar-button:disabled {
+  cursor: default;
+  opacity: var(--puck-opacity-disabled, 0.4);
+}
+
+.SelectedBlockBar-button:focus-visible {
+  outline: var(--puck-border-width-strong) solid var(--puck-color-interactive);
+}
+
+.SelectedBlockBar-button svg {
+  height: 20px;
+  width: 20px;
+}

@@ -150,7 +150,7 @@
           "level": "B",
           "widthPx": 44,
           "heightPx": 70,
-          "yFrac": 0.76
+          "yFrac": 0.77
         }
       ]
     },
@@ -163,7 +163,7 @@
           "level": "B",
           "widthPx": 44,
           "heightPx": 44,
-          "yFrac": 0.32
+          "yFrac": 0.86
         }
       ]
     },
@@ -176,27 +176,20 @@
           "level": "C",
           "widthPx": 44,
           "heightPx": 44,
-          "yFrac": 0.33
+          "yFrac": 0.86
         }
       ]
     },
     "undo": {
-      "actions": 3,
+      "actions": 1,
       "tabStops": 0,
       "commands": [
         {
-          "name": "menu bar toggle",
-          "level": "B",
-          "widthPx": 44,
-          "heightPx": 44,
-          "yFrac": 0.06
-        },
-        {
           "name": "Undo",
           "level": "B",
-          "widthPx": 44,
-          "heightPx": 44,
-          "yFrac": 0.17
+          "widthPx": 56,
+          "heightPx": 71,
+          "yFrac": 0.95
         }
       ]
     },
@@ -222,7 +215,7 @@
         {
           "name": "Blocks tab",
           "level": "B",
-          "widthPx": 64,
+          "widthPx": 56,
           "heightPx": 71,
           "yFrac": 0.95
         },
@@ -231,18 +224,18 @@
           "level": "B",
           "widthPx": 44,
           "heightPx": 70,
-          "yFrac": 0.76
+          "yFrac": 0.77
         }
       ]
     },
     "move": {
       "actions": 2,
-      "tabStops": 19,
+      "tabStops": 23,
       "commands": [
         {
           "name": "Outline tab",
           "level": "B",
-          "widthPx": 64,
+          "widthPx": 56,
           "heightPx": 71,
           "yFrac": 0.95
         },
@@ -251,40 +244,33 @@
           "level": "B",
           "widthPx": 168,
           "heightPx": 44,
-          "yFrac": 0.83
+          "yFrac": 0.86
         }
       ]
     },
     "remove": {
       "actions": 1,
-      "tabStops": 12,
+      "tabStops": 11,
       "commands": [
         {
           "name": "Delete (block bar)",
           "level": "C",
           "widthPx": 44,
           "heightPx": 44,
-          "yFrac": 0.71
+          "yFrac": 0.86
         }
       ]
     },
     "undo": {
-      "actions": 2,
-      "tabStops": 4,
+      "actions": 1,
+      "tabStops": 7,
       "commands": [
-        {
-          "name": "menu bar toggle",
-          "level": "B",
-          "widthPx": 44,
-          "heightPx": 44,
-          "yFrac": 0.09
-        },
         {
           "name": "Undo",
           "level": "B",
-          "widthPx": 44,
-          "heightPx": 44,
-          "yFrac": 0.09
+          "widthPx": 56,
+          "heightPx": 71,
+          "yFrac": 0.95
         }
       ]
     },

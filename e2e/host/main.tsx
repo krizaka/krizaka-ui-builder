@@ -81,9 +81,15 @@ const Host = () => {
         {button("fr", "Français")}
         {button("en", "English")}
       </header>
-      <div className="kz-builder-editor" style={{ height: 720 }}>
+      <div
+        className="kz-builder-editor"
+        style={{
+          height: "calc(100dvh - 72px)",
+        }} /* the editor fills what is left under the header */
+      >
         <Puck
           config={config}
+          height="100%"
           data={initial}
           dictionary={language === "fr" ? dictionaryFr : dictionaryEn}
           plugins={[
