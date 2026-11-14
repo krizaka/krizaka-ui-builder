@@ -5,6 +5,7 @@ import {
   type Reference,
   type Screen,
   belowFloor,
+  outOfReach,
   readReference,
   regressions,
   writeReference,
@@ -37,6 +38,9 @@ for (const screen of Object.keys(SCREENS) as Screen[]) {
       measured[key] = cell;
       console.log(`COST ${key} ${JSON.stringify(cell)}`);
       console.log(
+        `OUT-OF-REACH ${key} ${JSON.stringify(outOfReach(cell, screen))}`
+      );
+      console.log(
         `BELOW-FLOOR ${key} ${JSON.stringify(belowFloor(cell, screen))}`
       );
       await context.close();
@@ -45,6 +49,10 @@ for (const screen of Object.keys(SCREENS) as Screen[]) {
         writeReference({ ...readReference(), [key]: cell });
         return;
       }
+      expect(
+        outOfReach(cell, screen),
+        `level A or B commands above 60 % of the screen height on ${key}`
+      ).toEqual([]);
       const ref = readReference()[key];
       expect(
         ref,

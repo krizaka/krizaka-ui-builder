@@ -29,6 +29,24 @@ export function belowFloor(cell: CellMeasure, screen: Screen): string[] {
   return [...new Set(names)].sort();
 }
 
+/* Commands the editor does not own: the host page's content-language switch sits in the host's header. */
+const HOST_COMMANDS = new Set(["content language"]);
+
+/** T1 (#3546): on a phone every level A and B command of the editor is within the thumb's reach, the lower 40 %. */
+export const REACH_FRACTION = 0.6;
+export function outOfReach(cell: CellMeasure, screen: Screen): string[] {
+  if (screen !== "phone") return [];
+  const names = TASKS.flatMap((task) => cell[task].commands)
+    .filter(
+      (c) =>
+        c.level !== "C" &&
+        !HOST_COMMANDS.has(c.name) &&
+        c.yFrac < REACH_FRACTION
+    )
+    .map((c) => `${c.name} (${c.yFrac})`);
+  return [...new Set(names)].sort();
+}
+
 /** What got worse against the reference, as plain sentences. Empty: nothing grew. */
 export function regressions(
   now: CellMeasure,

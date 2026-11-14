@@ -50,8 +50,14 @@
   cursor: pointer;
   border-radius: var(--puck-radius-m);
   padding: var(--puck-space-2) var(--puck-space-1);
-  width: 64px;
+  width: 56px;
+  min-height: 44px;
   box-sizing: border-box;
+}
+
+.NavItem-link:disabled {
+  cursor: default;
+  opacity: var(--puck-opacity-disabled, 0.4);
 }
 
 @media (min-width: 638px) {
@@ -128,7 +134,7 @@
   }
 }
 
-.NavItem:not(.NavItem--active) > .NavItem-link:hover {
+.NavItem:not(.NavItem--active) > .NavItem-link:not(:disabled):hover {
   background-color: var(
     --puck-pluginbar-color-bg-hover,
     var(--puck-color-interactive-soft)

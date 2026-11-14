@@ -201,12 +201,15 @@
     var(--puck-color-surface-subtle)
   );
   grid-area: sidenav;
-  overflow: hidden;
+  /* The selected block's bar floats above the bottom bar */
+  overflow: visible;
+  position: relative;
   width: 100%;
 }
 
 @media (min-width: 638px) {
   .PuckLayout-nav {
+    overflow: hidden;
     border-top: 0;
     border-right: var(--puck-border-width-regular) solid
       var(--puck-color-border);

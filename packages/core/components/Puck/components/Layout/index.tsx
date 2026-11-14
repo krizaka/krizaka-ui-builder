@@ -27,8 +27,9 @@ import { FrameProvider } from "../../../../lib/frame-context";
 import { Sidebar } from "../Sidebar";
 import { useDeleteHotkeys } from "../../../../lib/use-delete-hotkeys";
 import { MenuItem, Nav } from "../Nav";
+import { SelectedBlockBar } from "../SelectedBlockBar";
 import { IconButton } from "../../../IconButton";
-import { Maximize2, Minimize2, ToyBrick } from "lucide-react";
+import { Maximize2, Minimize2, ToyBrick, Undo2 } from "lucide-react";
 import { PluginInternal } from "../../../../types/Internal";
 import { blocksPlugin } from "../../../../plugins/blocks";
 import { outlinePlugin } from "../../../../plugins/outline";
@@ -289,6 +290,24 @@ export const Layout = ({ children }: { children?: ReactNode }) => {
     (s) => s.state.ui.mobilePanelExpanded ?? false
   );
 
+  // Under 640px the history sits in the bottom bar, one tap, next to the panels.
+  const undo = useAppStore((s) => s.history.back);
+  const hasPast = useAppStore((s) => s.history.hasPast());
+  const undoLabel = useMessage("header-undo");
+  const navItems: Record<string, MenuItem> = useMemo(
+    () => ({
+      ...pluginItems,
+      undo: {
+        label: undoLabel,
+        icon: <Undo2 />,
+        onClick: undo,
+        disabled: !hasPast,
+        mobileOnly: true,
+      },
+    }),
+    [pluginItems, undo, hasPast, undoLabel]
+  );
+
   // Title follows the icon/action: collapse when expanded, expand otherwise.
   const maximizeLabel = useMessage("layout-maximize");
   const minimizeLabel = useMessage("layout-minimize");
@@ -333,7 +352,7 @@ export const Layout = ({ children }: { children?: ReactNode }) => {
                   </div>
                   <div className={getLayoutClassName("nav")}>
                     <Nav
-                      items={pluginItems}
+                      items={navItems}
                       mobileActions={
                         leftSideBarVisible &&
                         mobilePanelHeightMode === "toggle" && (
@@ -359,6 +378,7 @@ export const Layout = ({ children }: { children?: ReactNode }) => {
                         )
                       }
                     />
+                    <SelectedBlockBar />
                   </div>
                   <Sidebar
                     position="left"
