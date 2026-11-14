@@ -9,18 +9,6 @@ jest.mock("../components/Sidebar/styles.module.css", () => ({
   __esModule: true,
   default: new Proxy({}, { get: (_t, key) => String(key) }),
 }));
-jest.mock("@dnd-kit/react", () => {
-  const original = jest.requireActual("@dnd-kit/react");
-  return {
-    ...original,
-    DragDropProvider: ({ children }: { children: React.ReactNode }) => (
-      <>{children}</>
-    ),
-    useDroppable: () => ({ ref: () => undefined, isOver: false }),
-    useDraggable: () => ({ ref: () => undefined, isDragging: false }),
-  };
-});
-
 /** The viewport width the media queries answer for. */
 let viewportWidth = 1440;
 Object.defineProperty(window, "matchMedia", {
@@ -34,12 +22,10 @@ Object.defineProperty(window, "matchMedia", {
     removeListener: jest.fn(),
   }),
 });
-window.HTMLElement.prototype.scrollIntoView = jest.fn();
-(global as any).ResizeObserver = class {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-};
+(global as any).ResizeObserver = jest.fn(() => ({
+  observe: jest.fn(),
+  disconnect: jest.fn(),
+}));
 
 import { Puck } from "../index";
 
