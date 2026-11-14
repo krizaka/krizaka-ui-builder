@@ -124,3 +124,10 @@
   height: var(--puck-actionbar-action-size, var(--puck-icon-size-s));
   width: var(--puck-actionbar-action-size, var(--puck-icon-size-s));
 }
+
+/* On a phone or a touch screen the selected block's bar floats at the thumb (SelectedBlockBar): one bar per block. */
+@media (max-width: 637px), (pointer: coarse) {
+  .DraggableComponent-actionsOverlay {
+    display: none;
+  }
+}
