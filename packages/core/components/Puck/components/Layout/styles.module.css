@@ -76,7 +76,7 @@
 }
 
 .PuckLayout--mounted .PuckLayout-inner {
-  --puck-sidebar-width: 186px;
+  --puck-sidebar-width: 256px;
 }
 
 .PuckLayout--mobilePanelHeightToggle.PuckLayout--leftSideBarVisible
@@ -160,37 +160,13 @@
 
 @media (min-width: 638px) {
   .PuckLayout .PuckLayout-inner {
-    --puck-sidebar-width: minmax(186px, 250px);
+    --puck-sidebar-width: 256px;
   }
 }
 
 @media (min-width: 766px) {
   .PuckLayout .PuckLayout-inner {
     --puck-frame-width: auto;
-  }
-}
-
-@media (min-width: 990px) {
-  .PuckLayout .PuckLayout-inner {
-    --puck-sidebar-width: 256px;
-  }
-}
-
-@media (min-width: 1198px) {
-  .PuckLayout .PuckLayout-inner {
-    --puck-sidebar-width: 274px;
-  }
-}
-
-@media (min-width: 1398px) {
-  .PuckLayout .PuckLayout-inner {
-    --puck-sidebar-width: 290px;
-  }
-}
-
-@media (min-width: 1598px) {
-  .PuckLayout .PuckLayout-inner {
-    --puck-sidebar-width: 320px;
   }
 }
 

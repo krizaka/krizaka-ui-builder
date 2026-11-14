@@ -58,3 +58,10 @@
   --_puck-field-group-inset-top: var(--puck-space-4);
   --_puck-field-group-inset-bottom: var(--puck-space-4);
 }
+
+.PuckFields-empty {
+  color: var(--puck-color-grey-04);
+  font-size: var(--puck-font-size-xs);
+  margin: 0;
+  padding: var(--puck-space-4);
+}

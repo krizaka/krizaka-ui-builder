@@ -36,6 +36,9 @@ import { outlinePlugin } from "../../../../plugins/outline";
 import { fieldsPlugin } from "../../../../plugins/fields";
 import { normalizeIframeConfig } from "../../../../lib/style-config";
 
+/** Under this viewport width the left panel opens folded, as the rail of plugin tabs. */
+export const FOLD_BLOCKS_BELOW_PX = 1280;
+
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
 const getPluginTabClassName = getClassNameFactory("PuckPluginTab", styles);
@@ -122,6 +125,11 @@ export const Layout = ({ children }: { children?: ReactNode }) => {
           rightSideBarVisible: false,
         },
       });
+    } else if (
+      !window.matchMedia(`(min-width: ${FOLD_BLOCKS_BELOW_PX}px)`).matches
+    ) {
+      // Under 1280px the Blocks panel opens folded as a rail: the preview keeps the room.
+      dispatch({ type: "setUi", ui: { leftSideBarVisible: false } });
     }
 
     const handleResize = () => {

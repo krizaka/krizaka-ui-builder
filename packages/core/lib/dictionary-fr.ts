@@ -49,6 +49,7 @@ export const dictionaryFr: Record<DictionaryKey, string> = {
   "drawer-search": "Rechercher un bloc",
   "drawer-search-empty": "Aucun bloc ne correspond",
   "canvas-noconfig": "Aucune configuration pour {type}",
+  "fields-empty": "Choisissez un bloc à modifier",
   "field-readonly": "Lecture seule",
   "field-select": "Choisir",
   "field-arrayitem-summary": "Élément n° {index}",
