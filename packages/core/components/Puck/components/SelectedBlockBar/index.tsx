@@ -7,6 +7,7 @@ import { getClassNameFactory } from "../../../../lib";
 import { getItem } from "../../../../lib/data/get-item";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { useMessage } from "../../../../lib/use-message";
+import { useRovingToolbar } from "../../../../lib/use-roving-toolbar";
 import {
   duplicateBlock,
   moveBlock,
@@ -62,7 +63,9 @@ export const SelectedBlockBar = () => {
   const moveDownLabel = useMessage("action-movedown");
   const duplicateLabel = useMessage("action-duplicate");
   const deleteLabel = useMessage("action-delete");
-  const barLabel = useMessage("action-bar");
+  const barProps = useRovingToolbar<HTMLDivElement>({
+    label: useMessage("action-bar"),
+  });
 
   const at = selector ? { zone, index: selector.index } : null;
   const act = useCallback(
@@ -75,7 +78,7 @@ export const SelectedBlockBar = () => {
   if (!at || !permissions) return null;
 
   return (
-    <div role="toolbar" aria-label={barLabel} className={getClassName()}>
+    <div className={getClassName()} {...barProps}>
       {permissions.drag && (
         <>
           <BarButton
