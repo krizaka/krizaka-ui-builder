@@ -9,7 +9,7 @@ export type HistorySlice<D = any> = {
   hasPast: () => boolean;
   hasFuture: () => boolean;
   histories: History<D>[];
-  record: (data: D) => void;
+  record: ((data: D) => void) & { flush: VoidFunction };
   back: VoidFunction;
   forward: VoidFunction;
   currentHistory: () => History;
@@ -22,15 +22,28 @@ export type HistorySlice<D = any> = {
 
 const EMPTY_HISTORY_INDEX = 0;
 
-function debounce(func: Function, timeout = 300) {
-  let timer: NodeJS.Timeout;
+function debounce<A extends unknown[]>(
+  func: (...args: A) => void,
+  timeout = 300
+) {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let pending: A | undefined;
 
-  return (...args: any) => {
+  const debounced = (...args: A) => {
     clearTimeout(timer);
-    timer = setTimeout(() => {
-      func(...args);
-    }, timeout);
+    pending = args;
+    timer = setTimeout(debounced.flush, timeout);
   };
+
+  /** Runs the waiting call now, if there is one. */
+  debounced.flush = () => {
+    clearTimeout(timer);
+    const args = pending;
+    pending = undefined;
+    if (args) func(...args);
+  };
+
+  return debounced;
 }
 
 export type PuckHistory = {
@@ -97,6 +110,8 @@ export const createHistorySlice = (
     },
     currentHistory: () => get().history.histories[get().history.index],
     back: () => {
+      // A change made less than a debounce ago is not recorded yet: record it first, or Undo skips it
+      record.flush();
       const { history, dispatch } = get();
 
       if (history.hasPast()) {
@@ -113,6 +128,7 @@ export const createHistorySlice = (
       }
     },
     forward: () => {
+      record.flush();
       const { history, dispatch } = get();
 
       if (history.hasFuture()) {

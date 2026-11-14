@@ -12,7 +12,14 @@ import {
   useState,
   useTransition,
 } from "react";
-import { Copy, CornerLeftUp, Trash } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Copy,
+  CornerLeftUp,
+  Plus,
+  Trash,
+} from "lucide-react";
 import { createPortal } from "react-dom";
 import { useShallow } from "zustand/react/shallow";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
@@ -30,11 +37,19 @@ import { useOnDragFinished } from "../../lib/dnd/use-on-drag-finished";
 import isFixed from "../../lib/styles/is-fixed";
 import { assignRefs } from "../../lib/assign-refs";
 import { useMessage } from "../../lib/use-message";
+import {
+  addBlock,
+  duplicateBlock,
+  moveBlock,
+  removeBlock,
+  type BlockMove,
+} from "../../lib/block-actions";
 
 import { DragAxis } from "../../types";
 
 import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
+import { BlockPicker } from "../BlockPicker";
 import { dropZoneContext, DropZoneProvider } from "../DropZone";
 import { DropZoneContext, ZoneStoreContext } from "../DropZone/context";
 import { useDropAnimation } from "../DragDropContext/use-drop-animation";
@@ -51,22 +66,23 @@ const MEASURE_EVERY_MS = 100; // 10fps
 // Magic numbers are used to position actions overlay 8px from top of component, bottom of component (when sticky scrolling) and side of preview
 const space = 8;
 const actionsOverlayTop = space * 6.5;
-const actionsTop = -(actionsOverlayTop - 8);
 const actionsSide = space;
 
 const DefaultActionBar = ({
   label,
+  toolbarLabel,
   children,
   parentAction,
   dragHandle,
 }: {
   label: string | undefined;
+  toolbarLabel?: string;
   children: ReactNode;
   parentAction: ReactNode;
   dragHandle?: ReactNode;
   dragHandleRef?: (element: Element | null) => void;
 }) => (
-  <ActionBar>
+  <ActionBar toolbarLabel={toolbarLabel}>
     <ActionBar.Group>
       {parentAction}
       {label && <ActionBar.Label label={label} />}
@@ -498,21 +514,28 @@ export const DraggableComponent = ({
     });
   }, [ctx, path]);
 
-  const onDuplicate = useCallback(() => {
-    dispatch({
-      type: "duplicate",
-      sourceIndex: index,
-      sourceZone: zoneCompound,
-    });
-  }, [index, zoneCompound]);
+  const at = useMemo(
+    () => ({ zone: zoneCompound, index }),
+    [zoneCompound, index]
+  );
+  const zoneSize = useAppStore(
+    (s) => s.state.indexes.zones[zoneCompound]?.contentIds.length ?? 0
+  );
+  const [pickerOpen, setPickerOpen] = useState(false);
 
-  const onDelete = useCallback(() => {
-    dispatch({
-      type: "remove",
-      index: index,
-      zone: zoneCompound,
-    });
-  }, [index, zoneCompound]);
+  const onDuplicate = useCallback(() => duplicateBlock(appStore, at), [at]);
+  const onDelete = useCallback(() => removeBlock(appStore, at), [at]);
+  const onMove = useCallback(
+    (move: BlockMove) => void moveBlock(appStore, at, move),
+    [at]
+  );
+  const onPick = useCallback(
+    (type: string) => {
+      setPickerOpen(false);
+      void addBlock(appStore, type, { zone: zoneCompound, index: index + 1 });
+    },
+    [index, zoneCompound]
+  );
 
   const [hover, setHover] = useState(false);
 
@@ -692,6 +715,7 @@ export const DraggableComponent = ({
 
           if (exceedsBoundsTop) {
             el.style.top = "12px";
+            el.style.bottom = "auto";
             if (!exceedsBoundsLeft) {
               el.style.transformOrigin = "right top";
             }
@@ -734,6 +758,10 @@ export const DraggableComponent = ({
   const dragLabel = useMessage("action-drag");
   const duplicateLabel = useMessage("action-duplicate");
   const deleteLabel = useMessage("action-delete");
+  const moveUpLabel = useMessage("action-moveup");
+  const moveDownLabel = useMessage("action-movedown");
+  const addAfterLabel = useMessage("action-addafter");
+  const barLabel = useMessage("action-bar");
 
   const parentAction = useMemo(
     () =>
@@ -823,7 +851,9 @@ export const DraggableComponent = ({
                 className={getClassName("actions")}
                 style={{
                   transform: `scale(${1 / zoom}`,
-                  top: actionsTop / zoom,
+                  // Anchored by its bottom edge, so a taller bar (44px targets) grows upward and never covers the
+                  // first line of the block it belongs to
+                  bottom: space / zoom,
                   right: 0,
                   paddingLeft: actionsSide,
                   paddingRight: actionsSide,
@@ -833,9 +863,35 @@ export const DraggableComponent = ({
                 <CustomActionBar
                   parentAction={parentAction}
                   label={DEBUG ? id : label}
+                  toolbarLabel={barLabel}
                   dragHandle={dragHandle}
                   dragHandleRef={dragHandleRef}
                 >
+                  {permissions.drag && (
+                    <>
+                      <ActionBar.Action
+                        onClick={() => onMove("up")}
+                        label={moveUpLabel}
+                        disabled={index === 0}
+                      >
+                        <ArrowUp className={getClassName("actionsAction")} />
+                      </ActionBar.Action>
+                      <ActionBar.Action
+                        onClick={() => onMove("down")}
+                        label={moveDownLabel}
+                        disabled={index >= zoneSize - 1}
+                      >
+                        <ArrowDown className={getClassName("actionsAction")} />
+                      </ActionBar.Action>
+                    </>
+                  )}
+                  <ActionBar.Action
+                    onClick={() => setPickerOpen((open) => !open)}
+                    label={addAfterLabel}
+                    active={pickerOpen}
+                  >
+                    <Plus className={getClassName("actionsAction")} />
+                  </ActionBar.Action>
                   {permissions.duplicate && (
                     <ActionBar.Action
                       onClick={onDuplicate}
@@ -850,6 +906,12 @@ export const DraggableComponent = ({
                     </ActionBar.Action>
                   )}
                 </CustomActionBar>
+                {pickerOpen && (
+                  <BlockPicker
+                    onPick={onPick}
+                    onClose={() => setPickerOpen(false)}
+                  />
+                )}
               </div>
             </div>
             {!draggingFromHandle && (

@@ -1,0 +1,33 @@
+.BlockSearch {
+  align-items: center;
+  background: var(--puck-color-surface);
+  border: var(--puck-border-width-regular) solid var(--puck-color-border);
+  border-radius: var(--puck-radius-m);
+  color: var(--puck-color-text-muted);
+  display: flex;
+  gap: var(--puck-space-2);
+  margin-bottom: var(--puck-space-3);
+  min-height: 44px;
+  padding-inline: var(--puck-space-3);
+}
+
+.BlockSearch:focus-within {
+  outline: var(--puck-border-width-focus) solid var(--puck-color-focus-ring);
+}
+
+.BlockSearch svg {
+  flex-shrink: 0;
+  height: 16px;
+  width: 16px;
+}
+
+.BlockSearch-input {
+  background: transparent;
+  border: 0;
+  color: var(--puck-color-text);
+  flex: 1;
+  font-family: var(--puck-font-family);
+  font-size: var(--puck-font-size-xs);
+  min-width: 0;
+  outline: 0;
+}

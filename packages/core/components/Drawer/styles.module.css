@@ -74,3 +74,48 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* The « Add » button sits at the end of the row; the drag grip is for a fine pointer only. */
+.Drawer-add {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  background: transparent;
+  border: 0;
+  border-radius: var(--puck-drawer-item-radius, var(--puck-radius-m));
+  color: inherit;
+  cursor: pointer;
+}
+
+.Drawer-add svg {
+  height: 16px;
+  width: 16px;
+}
+
+.Drawer-add:focus-visible {
+  outline: var(--puck-border-width-focus) solid var(--puck-color-focus-ring);
+  outline-offset: calc(var(--puck-border-width-focus) * -1);
+}
+
+.Drawer-add:disabled {
+  cursor: not-allowed;
+}
+
+.Drawer-draggable:has(.Drawer-add) .DrawerItem-draggable {
+  padding-inline-end: 44px;
+}
+
+@media (pointer: coarse), (max-width: 600px) {
+  .DrawerItem-icon {
+    display: none;
+  }
+
+  .DrawerItem-draggable {
+    cursor: default;
+    min-height: 44px;
+  }
+}

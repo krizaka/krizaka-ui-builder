@@ -1,7 +1,8 @@
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ReactNode, useEffect } from "react";
-import { useAppStore } from "../../store";
+import { useAppStore, useAppStoreApi } from "../../store";
+import { addBlock } from "../../lib/block-actions";
 import { useMessage } from "../../lib/use-message";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Drawer } from "../Drawer";
@@ -17,6 +18,8 @@ const ComponentListItem = ({
   index?: number; // TODO deprecate
 }) => {
   const overrides = useAppStore((s) => s.overrides);
+  const appStore = useAppStoreApi();
+  const addLabel = useMessage("drawer-item-add", { label: label ?? name });
   const canInsert = useAppStore(
     (s) =>
       s.permissions.getPermissions({
@@ -34,7 +37,13 @@ const ComponentListItem = ({
   }, [overrides]);
 
   return (
-    <Drawer.Item label={label} name={name} isDragDisabled={!canInsert}>
+    <Drawer.Item
+      label={label}
+      name={name}
+      isDragDisabled={!canInsert}
+      onAdd={() => void addBlock(appStore, name)}
+      addLabel={addLabel}
+    >
       {overrides.componentItem ?? overrides.drawerItem}
     </Drawer.Item>
   );

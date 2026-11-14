@@ -4,9 +4,11 @@ import { useShallow } from "zustand/react/shallow";
 
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import { getItem } from "../../../../lib/data/get-item";
-import { useAppStore } from "../../../../store";
+import { useAppStore, useAppStoreApi } from "../../../../store";
 import { IconButton } from "../../../IconButton";
 
+import { duplicateBlock, removeBlock } from "../../../../lib/block-actions";
+import { RowMenu } from "./row-menu";
 import { useOutlineDndStoreApi } from "../../lib/store";
 import { LayerNode } from "../../types";
 
@@ -25,7 +27,7 @@ export const LayerActions = ({
   node: LayerNode;
   visible: boolean;
 }) => {
-  const dispatch = useAppStore((s) => s.dispatch);
+  const appStore = useAppStoreApi();
   const outlineStore = useOutlineDndStoreApi();
 
   const permissions = useAppStore(
@@ -37,6 +39,7 @@ export const LayerActions = ({
       const itemPermissions = s.permissions.getPermissions({ item });
 
       return {
+        drag: itemPermissions.drag,
         delete: itemPermissions.delete,
         duplicate: itemPermissions.duplicate,
       };
@@ -55,13 +58,9 @@ export const LayerActions = ({
         return;
       }
 
-      dispatch({
-        type: "remove",
-        index: node.index,
-        zone: node.zoneCompound,
-      });
+      removeBlock(appStore, { index: node.index, zone: node.zoneCompound });
     },
-    [dispatch, outlineStore, node]
+    [appStore, outlineStore, node]
   );
 
   const duplicateItem = useCallback(
@@ -73,21 +72,18 @@ export const LayerActions = ({
         return;
       }
 
-      dispatch({
-        type: "duplicate",
-        sourceIndex: node.index,
-        sourceZone: node.zoneCompound,
-      });
+      duplicateBlock(appStore, { index: node.index, zone: node.zoneCompound });
     },
-    [dispatch, outlineStore, node.index, node.zoneCompound]
+    [appStore, outlineStore, node.index, node.zoneCompound]
   );
 
-  if (!permissions.delete && !permissions.duplicate) {
+  if (!permissions.delete && !permissions.duplicate && !permissions.drag) {
     return null;
   }
 
   return (
     <div className={getClassName({ visible })}>
+      {permissions.drag && <RowMenu node={node} />}
       {permissions.duplicate && (
         <IconButton onClick={duplicateItem} title={duplicateMsg} type="button">
           <Copy />

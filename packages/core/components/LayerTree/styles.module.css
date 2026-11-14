@@ -67,3 +67,13 @@
       var(--_puck-outline-border-width)
   );
 }
+
+/* Read by a screen reader, never seen. */
+.LayerTreeRoot-announcer {
+  block-size: 1px;
+  clip-path: inset(50%);
+  inline-size: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}

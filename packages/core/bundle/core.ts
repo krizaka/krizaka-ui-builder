@@ -25,6 +25,8 @@ export { InlineTextField } from "../components/InlineTextField";
 export { Puck } from "../components/Puck";
 export * from "../components/Render";
 
+export { dictionaryFr } from "../lib/dictionary-fr";
+export { defaultDictionary as dictionaryEn } from "../lib/dictionary";
 export * from "../lib/migrate";
 export * from "../lib/transform-props";
 export { registerOverlayPortal } from "../lib/overlay-portal";

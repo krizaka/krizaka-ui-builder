@@ -148,3 +148,10 @@
 .Layer--isDragSource > .Layer-zones {
   opacity: 0.5;
 }
+
+/* A row is a target a finger can hit: 44px on a coarse pointer or a phone-wide screen. */
+@media (pointer: coarse), (max-width: 600px) {
+  .Layer-inner {
+    min-height: 44px;
+  }
+}
