@@ -6,7 +6,8 @@ const config: Config = {
 
   // The lcov report the SonarCloud CI analysis reads (ci.yml sonar-coverage-paths).
   collectCoverage: true,
-  coverageReporters: ["lcov", "text-summary"],
+  // projectRoot: the SF paths are relative to the repository root, where the scanner runs.
+  coverageReporters: [["lcov", { projectRoot: "../.." }], "text-summary"],
   coverageDirectory: "coverage",
 
   // Treat these files as ESM so `import`/`export` keep working
