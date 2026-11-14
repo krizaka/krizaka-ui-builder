@@ -12,7 +12,7 @@
   border: 0;
   border-radius: calc(var(--puck-radius-m) - 2px);
   box-sizing: border-box;
-  color: var(--puck-color-text-muted);
+  color: var(--puck-color-text-secondary);
   cursor: pointer;
   font: inherit;
   font-size: var(--puck-font-size-xxs);

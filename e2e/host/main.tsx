@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Puck,
@@ -68,6 +68,21 @@ const LANGUAGES = [
   { value: "en", label: "English" },
 ];
 
+/* The canvas is an iframe: it gets the theme class of the page, as the live host's ThemedFrame does. */
+const ThemedFrame = ({
+  children,
+  document: frame,
+}: {
+  children: ReactNode;
+  document?: Document;
+}) => {
+  useEffect(() => {
+    const light = document.documentElement.classList.contains("light");
+    frame?.documentElement.classList.toggle("light", light);
+  }, [frame]);
+  return <>{children}</>;
+};
+
 const Host = () => {
   const [language, setLanguage] = useState<Language>("fr");
 
@@ -83,6 +98,7 @@ const Host = () => {
           options: LANGUAGES,
           onChange: (value) => setLanguage(value as Language),
         }}
+        overrides={{ iframe: ThemedFrame }}
         plugins={[
           blocksPlugin({ label: language === "fr" ? "Blocs" : "Blocks" }),
           outlinePlugin({ label: language === "fr" ? "Plan" : "Outline" }),
