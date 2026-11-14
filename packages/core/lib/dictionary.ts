@@ -57,6 +57,7 @@ export const defaultDictionary = {
   // Canvas
   "canvas-noconfig": "No configuration for {type}",
   // Fields
+  "fields-empty": "Choose a block to edit",
   "field-readonly": "Read-only",
   "field-select": "Select",
   "field-arrayitem-summary": "Item #{index}",

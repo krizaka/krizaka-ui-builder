@@ -1,4 +1,5 @@
 import { Loader } from "../../../Loader";
+import { useMessage } from "../../../../lib/use-message";
 import { isFieldVisible } from "../../../../lib/fields/is-field-visible";
 import { rendersCollapsibleGroup } from "../../../../lib/fields/renders-collapsible-group";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
@@ -309,6 +310,20 @@ const FieldsInternal = ({ wrapFields = true }: { wrapFields?: boolean }) => {
   const isLoading = fieldsLoading || componentResolving;
 
   const Wrapper = useMemo(() => overrides.fields || DefaultFields, [overrides]);
+
+  const emptyMessage = useMessage("fields-empty");
+
+  // No block selected and the page declares no field of its own (Puck's implicit « title » is not one): say what to do.
+  const pageHasFields = useAppStore(
+    (s) => Object.keys(s.config.root?.fields ?? {}).length > 0
+  );
+  if (!id && !pageHasFields) {
+    return (
+      <p className={getClassName("empty")} role="status">
+        {emptyMessage}
+      </p>
+    );
+  }
 
   return (
     <form
