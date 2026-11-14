@@ -1,9 +1,9 @@
-/* A phone only: from 638px up the bar inside the preview is enough. */
+/* A phone (narrow screen or touch) only: elsewhere the bar inside the preview is enough, and it is hidden here. */
 .SelectedBlockBar {
   display: none;
 }
 
-@media (max-width: 637px) {
+@media (max-width: 637px), (pointer: coarse) {
   .SelectedBlockBar {
     display: flex;
     gap: var(--puck-space-1);
@@ -41,7 +41,9 @@
 }
 
 .SelectedBlockBar-button:focus-visible {
-  outline: var(--puck-border-width-strong) solid var(--puck-color-interactive);
+  /* The bar is an inverse surface: the ring is the inverse text colour, 3:1 or more on it in both themes. */
+  outline: var(--puck-border-width-strong) solid var(--puck-color-text-inverse);
+  outline-offset: calc(var(--puck-border-width-strong) * -1);
 }
 
 .SelectedBlockBar-button svg {

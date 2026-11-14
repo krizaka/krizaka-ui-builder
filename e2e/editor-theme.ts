@@ -103,3 +103,61 @@ export const controlPairs = (page: Page): Promise<Pair[]> =>
         iconOnly: text === "",
       }));
   });
+
+/** The toolbars of the selected block that are on screen: the one inside the preview and the floating one. */
+export const visibleBlockBars = async (
+  page: Page
+): Promise<{ inCanvas: number; floating: number }> => {
+  const count = (l: ReturnType<Page["locator"]>) =>
+    l.evaluateAll(
+      (els) => els.filter((e) => e.getClientRects().length > 0).length
+    );
+  return {
+    inCanvas: await count(
+      page.frameLocator(`${EDITOR} iframe`).first().locator("[role=toolbar]")
+    ),
+    floating: await count(
+      page.locator(`${EDITOR} [role=toolbar][class*=SelectedBlockBar]`)
+    ),
+  };
+};
+
+export type FocusRing = { label: string; ring: string; surface: string };
+
+/** Focuses each button of the visible block bars with the keyboard and reads its ring colour and the surface behind it. */
+export const focusRings = async (page: Page): Promise<FocusRing[]> => {
+  const rings: FocusRing[] = [];
+  const spots = [
+    page.locator(`${EDITOR} [class*=SelectedBlockBar-button]:not([disabled])`),
+    page
+      .frameLocator(`${EDITOR} iframe`)
+      .first()
+      .locator("[role=toolbar] button:not([disabled])"),
+  ];
+  for (const spot of spots) {
+    const first = spot.first();
+    if (!(await first.isVisible().catch(() => false))) continue;
+    await page.keyboard.press("Tab");
+    await first.focus();
+    rings.push(
+      await first.evaluate((el) => {
+        const style = getComputedStyle(el);
+        let surface = "rgb(255, 255, 255)";
+        for (let n: Element | null = el; n; n = n.parentElement) {
+          const c = getComputedStyle(n).backgroundColor;
+          if (c !== "rgba(0, 0, 0, 0)" && c !== "transparent") {
+            surface = c;
+            break;
+          }
+        }
+        return {
+          label:
+            el.getAttribute("title") ?? el.getAttribute("aria-label") ?? "",
+          ring: style.outlineStyle === "none" ? "none" : style.outlineColor,
+          surface,
+        };
+      })
+    );
+  }
+  return rings;
+};
