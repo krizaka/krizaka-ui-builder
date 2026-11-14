@@ -9,7 +9,7 @@
           "level": "B",
           "widthPx": 44,
           "heightPx": 51,
-          "yFrac": 0.44
+          "yFrac": 0.33
         }
       ]
     },
@@ -22,7 +22,7 @@
           "level": "B",
           "widthPx": 32,
           "heightPx": 32,
-          "yFrac": 0.33
+          "yFrac": 0.22
         }
       ]
     },
@@ -35,7 +35,7 @@
           "level": "C",
           "widthPx": 32,
           "heightPx": 32,
-          "yFrac": 0.33
+          "yFrac": 0.22
         }
       ]
     },
@@ -46,9 +46,9 @@
         {
           "name": "Undo",
           "level": "B",
-          "widthPx": 44,
-          "heightPx": 44,
-          "yFrac": 0.13
+          "widthPx": 40,
+          "heightPx": 40,
+          "yFrac": 0.04
         }
       ]
     },
@@ -60,7 +60,7 @@
           "name": "content language",
           "level": "A",
           "widthPx": 72,
-          "heightPx": 44,
+          "heightPx": 34,
           "yFrac": 0.04
         }
       ]
@@ -69,75 +69,77 @@
   "desk/keyboard": {
     "add": {
       "actions": 1,
-      "tabStops": 13,
+      "tabStops": 9,
       "commands": [
         {
           "name": "Add Citation (block list)",
           "level": "B",
           "widthPx": 44,
           "heightPx": 51,
-          "yFrac": 0.44
+          "yFrac": 0.33
         }
       ]
     },
     "move": {
       "actions": 2,
-      "tabStops": 19,
+      "tabStops": 14,
       "commands": [
         {
           "name": "Outline tab",
           "level": "B",
           "widthPx": 40,
           "heightPx": 63,
-          "yFrac": 0.35
+          "yFrac": 0.24
         },
         {
           "name": "Citation (outline row, Alt+Up)",
           "level": "B",
           "widthPx": 133,
           "heightPx": 32,
-          "yFrac": 0.35
+          "yFrac": 0.24
         }
-      ]
+      ],
+      "arrowKeys": 1
     },
     "remove": {
       "actions": 1,
-      "tabStops": 12,
+      "tabStops": 7,
       "commands": [
         {
           "name": "Delete (block bar)",
           "level": "C",
           "widthPx": 32,
           "heightPx": 32,
-          "yFrac": 0.27
+          "yFrac": 0.16
         }
       ]
     },
     "undo": {
       "actions": 1,
-      "tabStops": 5,
+      "tabStops": 1,
       "commands": [
         {
           "name": "Undo",
           "level": "B",
-          "widthPx": 44,
-          "heightPx": 44,
-          "yFrac": 0.13
+          "widthPx": 40,
+          "heightPx": 40,
+          "yFrac": 0.04
         }
       ]
     },
     "language": {
       "actions": 1,
-      "tabStops": 2,
+      "tabStops": 1,
       "commands": [
         {
           "name": "content language",
           "level": "A",
           "widthPx": 72,
-          "heightPx": 44,
+          "heightPx": 34,
           "yFrac": 0.04
         }
-      ]
+      ],
+      "arrowKeys": 5
     }
   },
   "phone/pointer": {
@@ -150,7 +152,7 @@
           "level": "B",
           "widthPx": 44,
           "heightPx": 70,
-          "yFrac": 0.77
+          "yFrac": 0.76
         }
       ]
     },
@@ -163,7 +165,7 @@
           "level": "B",
           "widthPx": 44,
           "heightPx": 44,
-          "yFrac": 0.86
+          "yFrac": 0.87
         }
       ]
     },
@@ -176,7 +178,7 @@
           "level": "C",
           "widthPx": 44,
           "heightPx": 44,
-          "yFrac": 0.86
+          "yFrac": 0.87
         }
       ]
     },
@@ -194,7 +196,7 @@
       ]
     },
     "language": {
-      "actions": 1,
+      "actions": 2,
       "tabStops": 0,
       "commands": [
         {
@@ -202,7 +204,7 @@
           "level": "A",
           "widthPx": 72,
           "heightPx": 44,
-          "yFrac": 0.04
+          "yFrac": 0.05
         }
       ]
     }
@@ -210,7 +212,7 @@
   "phone/keyboard": {
     "add": {
       "actions": 2,
-      "tabStops": 14,
+      "tabStops": 9,
       "commands": [
         {
           "name": "Blocks tab",
@@ -224,13 +226,13 @@
           "level": "B",
           "widthPx": 44,
           "heightPx": 70,
-          "yFrac": 0.77
+          "yFrac": 0.76
         }
       ]
     },
     "move": {
       "actions": 2,
-      "tabStops": 23,
+      "tabStops": 15,
       "commands": [
         {
           "name": "Outline tab",
@@ -244,26 +246,28 @@
           "level": "B",
           "widthPx": 168,
           "heightPx": 44,
-          "yFrac": 0.86
+          "yFrac": 0.83
         }
-      ]
+      ],
+      "arrowKeys": 1
     },
     "remove": {
       "actions": 1,
-      "tabStops": 11,
+      "tabStops": 3,
       "commands": [
         {
           "name": "Delete (block bar)",
           "level": "C",
           "widthPx": 44,
           "heightPx": 44,
-          "yFrac": 0.86
+          "yFrac": 0.87
         }
-      ]
+      ],
+      "arrowKeys": 2
     },
     "undo": {
       "actions": 1,
-      "tabStops": 7,
+      "tabStops": 2,
       "commands": [
         {
           "name": "Undo",
@@ -275,17 +279,25 @@
       ]
     },
     "language": {
-      "actions": 1,
-      "tabStops": 2,
+      "actions": 2,
+      "tabStops": 3,
       "commands": [
+        {
+          "name": "panel tab",
+          "level": "B",
+          "widthPx": 56,
+          "heightPx": 71,
+          "yFrac": 0.95
+        },
         {
           "name": "content language",
           "level": "A",
           "widthPx": 72,
           "heightPx": 44,
-          "yFrac": 0.04
+          "yFrac": 0.05
         }
-      ]
+      ],
+      "arrowKeys": 4
     }
   }
 }

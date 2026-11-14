@@ -17,6 +17,7 @@ import {
   scrollEditorIntoPlace,
   resetTabOrigin,
   tabTo,
+  takeArrowKeys,
   toCommand,
 } from "./editor-task-cost";
 
@@ -299,14 +300,24 @@ async function undoByKeyboard({ page, memo }: Journey): Promise<TaskMeasure> {
   return ok ? done(actions, stops + reached.stops, commands) : notPossible();
 }
 
-/* ---- language: the content language switches to English (the active language button turns primary) ---- */
+/* ---- language: the content language switches to English (the English button of the header's segmented control is pressed) ---- */
 
 const languageButton = (page: Page) =>
   page.getByRole("button", { name: LABELS.contentLanguage }).first();
 const languageIsEnglish = async (page: Page): Promise<boolean> =>
-  (await languageButton(page).getAttribute("data-variant")) === "primary";
+  (await languageButton(page).getAttribute("aria-pressed")) === "true";
 
+/* On a phone an open panel covers the header: the panel's own tab closes it. */
 async function languageByPointer({ page }: Journey): Promise<TaskMeasure> {
+  let actions = 0;
+  if (!(await isReachable(languageButton(page)))) {
+    await page
+      .getByRole("button", { name: await openPanelTab(page) })
+      .first()
+      .click();
+    actions += 1;
+    await page.waitForTimeout(400);
+  }
   const command = await measureShown(
     page,
     languageButton(page),
@@ -314,19 +325,34 @@ async function languageByPointer({ page }: Journey): Promise<TaskMeasure> {
     "A"
   );
   await languageButton(page).click();
+  actions += 1;
   return (await settled(page, () => languageIsEnglish(page)))
-    ? done(1, 0, [command])
+    ? done(actions, 0, [command])
     : notPossible();
 }
 
 async function languageByKeyboard({ page }: Journey): Promise<TaskMeasure> {
   await resetTabOrigin(page);
-  const { stops, focus } = await tabTo(page, LABELS.contentLanguage);
-  if (stops === null || !focus) return notPossible();
+  const commands: CommandMeasure[] = [];
+  let stops = 0;
+  let actions = 0;
+  if (!(await isReachable(languageButton(page)))) {
+    const tab = await tabTo(page, await openPanelTab(page));
+    if (tab.stops === null || !tab.focus) return notPossible();
+    stops += tab.stops;
+    commands.push(toCommand("panel tab", "B", tab.focus));
+    await pressed(page, "Enter");
+    actions += 1;
+    await resetTabOrigin(page);
+  }
+  const reached = await tabTo(page, LABELS.contentLanguage);
+  if (reached.stops === null || !reached.focus) return notPossible();
   await pressed(page, "Enter");
+  actions += 1;
   if (!(await settled(page, () => languageIsEnglish(page))))
     return notPossible();
-  return done(1, stops, [toCommand("content language", "A", focus)]);
+  commands.push(toCommand("content language", "A", reached.focus));
+  return done(actions, stops + reached.stops, commands);
 }
 
 const STEPS = {
@@ -355,7 +381,10 @@ export async function playJourney(
   const cell = {} as CellMeasure;
   for (const task of TASKS) {
     await scrollEditorIntoPlace(page);
-    cell[task] = await steps[task](journey);
+    takeArrowKeys(page);
+    const measure = await steps[task](journey);
+    const arrowKeys = takeArrowKeys(page);
+    cell[task] = arrowKeys > 0 ? { ...measure, arrowKeys } : measure;
   }
   return cell;
 }

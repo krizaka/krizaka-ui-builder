@@ -83,6 +83,8 @@ type PuckProps<
   }) => ReactElement;
   headerTitle?: string;
   headerPath?: string;
+  /** The content language of the page, shown in the header as a segmented control (krizaka-internal#3547). */
+  contentLanguage?: ContentLanguage;
   viewports?: Viewports;
   iframe?: IframeConfig;
   dnd?: DndConfig;
@@ -92,6 +94,12 @@ type PuckProps<
   height?: CSSProperties["height"];
   _experimentalFullScreenCanvas?: boolean;
   _experimentalVirtualization?: boolean;
+};
+
+export type ContentLanguage = {
+  value: string;
+  options: { value: string; label: string }[];
+  onChange: (value: string) => void;
 };
 
 const propsContext = createContext<Partial<PuckProps>>({});

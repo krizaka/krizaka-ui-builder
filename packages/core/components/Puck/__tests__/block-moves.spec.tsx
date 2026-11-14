@@ -170,7 +170,8 @@ describe("the block list adds without dragging", () => {
   });
 });
 
-const navElement = () => document.querySelector("nav") as HTMLElement;
+const navElement = () =>
+  document.querySelector("[aria-label='Editor panels']") as HTMLElement;
 // The bar is the nav's sibling inside the bottom bar wrapper
 const selectedBar = () => {
   const bar = navElement().nextElementSibling;
@@ -217,6 +218,20 @@ describe("on a phone the frequent actions sit in the bottom bar", () => {
       .map((b) => b.getAttribute("aria-label"));
     expect(names).toEqual(["Move up", "Move down", "Duplicate", "Remove"]);
     expect(bar.getByLabelText("Move up")).toBeDisabled();
+  });
+
+  it("is one toolbar: one Tab stop, the arrows move between the enabled buttons", async () => {
+    fireEvent.click(rowButtons()[1]);
+    await flush();
+    const bar = selectedBar()!;
+    const buttons = within(bar).getAllByRole("button", all);
+    expect(buttons.filter((b) => b.tabIndex === 0)).toHaveLength(1);
+    buttons[0].focus();
+    fireEvent.keyDown(buttons[0], { key: "ArrowRight" });
+    expect(document.activeElement).toBe(buttons[1]);
+    fireEvent.keyDown(buttons[1], { key: "End" });
+    expect(document.activeElement).toBe(buttons[3]);
+    expect(buttons.filter((b) => b.tabIndex === 0)).toEqual([buttons[3]]);
   });
 
   it("Duplicate and Remove act on the selected block", async () => {
