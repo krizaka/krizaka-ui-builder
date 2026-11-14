@@ -10,9 +10,14 @@
       /* What ThemeScript of @krizaka/ui does: the stored mode (kz-theme: dark | light | system, default system) puts the class "light" on <html>. */
       (function () {
         var mode = null;
-        try { mode = localStorage.getItem("kz-theme"); } catch (e) {}
+        try {
+          mode = localStorage.getItem("kz-theme");
+        } catch (e) {}
         var dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        document.documentElement.classList.toggle("light", mode === "light" || ((mode !== "dark") && !dark));
+        document.documentElement.classList.toggle(
+          "light",
+          mode === "light" || (mode !== "dark" && !dark)
+        );
       })();
     </script>
     <style>

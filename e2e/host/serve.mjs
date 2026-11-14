@@ -35,8 +35,7 @@ const ASSETS = new Set(["/main.js", "/puck.css", "/theme.css"]);
 const TYPES = { ".js": "text/javascript", ".css": "text/css" };
 createServer(async (req, res) => {
   const path = new URL(req.url ?? "/", "http://localhost").pathname;
-  const asset =
-    ASSETS.has(path) ? path : "/index.html";
+  const asset = ASSETS.has(path) ? path : "/index.html";
   const ext = asset.slice(asset.lastIndexOf("."));
   res.setHeader("content-type", TYPES[ext] ?? "text/html; charset=utf-8");
   res.end(await readFile(join(out, asset)));
