@@ -21,7 +21,7 @@ shows the version published now.
 | Upstream     | Puck 0.24.0 (MIT, `puckeditor/puck`), tracked as the `upstream` remote: security and bug fixes are cherry-picked, generic fixes are proposed back from this fork. |
 | Licence      | MIT. Puck's [LICENSE](LICENSE) is kept unchanged; see [NOTICE](NOTICE).                                                                                           |
 | Try it       | The editor in your browser, nothing saved: [ui.krizaka.com/builder](https://ui.krizaka.com/builder).                                                              |
-| Used by      | [Folioviv](https://github.com/krizaka/folioviv)'s shop editor (Boutique › Page).                                                                                  |
+| Planned      | Folioviv's shop editor (Boutique › Page): planned (krizaka/folioviv#1893), not shipped yet.                                                                       |
 | Contributing | [AGENTS.md](AGENTS.md) and [docs/agents.md](docs/agents.md); the org's standards in [krizaka/.github](https://github.com/krizaka/.github).                        |
 
 ## Today
